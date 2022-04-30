@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from typing import Union
+from typing import Union, List
 
 import requests
 import pandoc
@@ -11,11 +11,11 @@ WIKI_URL = "https://en.wikipedia.org/wiki"
 API_URL = "https://en.wikipedia.org/w/api.php"
 
 
-def get_article(title: str, response_only: bool = False):
+def get_articles(titles: List[str], response_only: bool = False):
     params = {
         "action": "query",
         "format": "json",
-        "titles": title,
+        "titles": "|".join(list(map(sanitize, titles))),
         "prop": "extracts",
         "explaintext": True,
         "exsectionformat": "plain",
@@ -23,7 +23,7 @@ def get_article(title: str, response_only: bool = False):
 
     data = get_page(f"{API_URL}", params=params, response_only=response_only)
     results = data["query"]["pages"]
-    pages = [page["extract"] for pageid, page in results.items()]
+    pages = [page.get("extract", "") for pageid, page in results.items()]
 
     text = "".join(pages)
 
