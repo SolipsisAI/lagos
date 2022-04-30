@@ -4,16 +4,11 @@ import wikipediaapi
 from lagos.utils import sanitize
 
 
-def section_text(
-    section: wikipediaapi.WikipediaPageSection,
-    level: int = 0,
-):
-    if not section.sections:
-        return section.text
-
-    level += 1
-
-    return section.text + section_text(section.sections[level], level)
+def process_sections(sections, level: int = 0, text: str = ""):
+    for section in sections:
+        print(section.title)
+        text += process_sections(section.sections, level + 1, section.text)
+    return text
 
 
 def get_page(title) -> str:
