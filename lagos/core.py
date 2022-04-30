@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-from typing import Union, List
+from typing import Union, List, Dict
 
 import requests
-import pandoc
-from pandoc import types
 
 from lagos.utils import sanitize
 
@@ -11,35 +9,35 @@ WIKI_URL = "https://en.wikipedia.org/wiki"
 API_URL = "https://en.wikipedia.org/w/api.php"
 
 
-def get_articles(titles: List[str], response_only: bool = False):
+def get_articles(*titles):
     params = {
         "action": "query",
         "format": "json",
-        "titles": "|".join(list(map(sanitize, titles))),
         "prop": "extracts",
         "explaintext": True,
         "exsectionformat": "plain",
     }
 
-    data = get_page(f"{API_URL}", params=params, response_only=response_only)
-    results = data["query"]["pages"]
-    pages = [page.get("extract", "") for pageid, page in results.items()]
+    params["titles"] = "|".join(list(map(sanitize, titles))),
+    
+    if len(titles) > 1:
+        params["exintro"] = True
 
+    data = get_page(f"{API_URL}", format="json", params=params)
+    results = data["query"]["pages"]
+    pages = [page.get("extract", "") for _, page in results.items()]
     text = "".join(pages)
 
     return "\n".join(text.split("\n"))
 
 
 def get_page(
-    url: str, format: str = "json", params=None, response_only: bool = False
-) -> Union[str, None]:
+    url: str, format: str = "json", params=None
+) -> Union[str, Dict, None]:
     if params is None:
         params = {"action": "raw"}
 
     r = requests.get(url, params=params)
-
-    if response_only:
-        return r
 
     if r.status_code >= 300:
         return None
