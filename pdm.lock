@@ -192,7 +192,11 @@ dependencies = [
 [[package]]
 name = "pandoc"
 version = "2.2"
-summary = "UNKNOWN"
+summary = "Pandoc Documents for Python"
+dependencies = [
+    "plumbum",
+    "ply",
+]
 
 [[package]]
 name = "parso"
