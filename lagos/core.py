@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from typing import Union, List, Dict
 
-import requests
+import tensorflow as tf
 
 from lagos.utils import sanitize
+
 
 WIKI_URL = "https://en.wikipedia.org/wiki"
 API_URL = "https://en.wikipedia.org/w/api.php"
