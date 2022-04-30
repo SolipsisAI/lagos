@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 import click
 
-from lagos.core import get_articles
+from lagos.core import get_page_text 
 
 
 @click.command()
-@click.argument("titles", nargs=-1)
-def main(titles):
-    print(titles)
-    result = get_articles(*titles)
+@click.argument("title")
+@click.option("--exclude", "-e", default=None, help="Delimited by |")
+def main(title, exclude):
+    result = get_page_text(title, exclude)
     print(result)
