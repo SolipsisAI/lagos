@@ -190,15 +190,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "pandoc"
-version = "2.2"
-summary = "Pandoc Documents for Python"
-dependencies = [
-    "plumbum",
-    "ply",
-]
-
-[[package]]
 name = "parso"
 version = "0.8.3"
 requires_python = ">=3.6"
@@ -234,20 +225,6 @@ name = "pluggy"
 version = "1.0.0"
 requires_python = ">=3.6"
 summary = "plugin and hook calling mechanisms for python"
-
-[[package]]
-name = "plumbum"
-version = "1.7.2"
-requires_python = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
-summary = "Plumbum: shell combinators library"
-dependencies = [
-    "pywin32; platform_system == \"Windows\" and platform_python_implementation != \"PyPy\"",
-]
-
-[[package]]
-name = "ply"
-version = "3.11"
-summary = "Python Lex & Yacc"
 
 [[package]]
 name = "prompt-toolkit"
@@ -301,11 +278,6 @@ dependencies = [
     "py>=1.8.2",
     "tomli>=1.0.0",
 ]
-
-[[package]]
-name = "pywin32"
-version = "303"
-summary = "Python for Window Extensions"
 
 [[package]]
 name = "pyxdg"
@@ -393,7 +365,7 @@ summary = "Measures the displayed width of unicode strings in a terminal"
 
 [metadata]
 lock_version = "3.1"
-content_hash = "sha256:b45c4dd49cef9d4509ae178f0538de63dd0f5041ae88766d532442b3afd1f555"
+content_hash = "sha256:4d5b5363ed7dde69af0a7448fd13dd926fe42ae1f0bf20611421fa316de2663c"
 
 [metadata.files]
 "appnope 0.1.3" = [
@@ -593,9 +565,6 @@ content_hash = "sha256:b45c4dd49cef9d4509ae178f0538de63dd0f5041ae88766d532442b3a
     {file = "packaging-21.3-py3-none-any.whl", hash = "sha256:ef103e05f519cdc783ae24ea4e2e0f508a9c99b2d4969652eed6a2e1ea5bd522"},
     {file = "packaging-21.3.tar.gz", hash = "sha256:dd47c42927d89ab911e606518907cc2d3a1f38bbd026385970643f9c5b8ecfeb"},
 ]
-"pandoc 2.2" = [
-    {file = "pandoc-2.2.tar.gz", hash = "sha256:d063ee252f2761010f16cf3a14912ad9245187c24c56f4b1ad9696e104fe6e1e"},
-]
 "parso 0.8.3" = [
     {file = "parso-0.8.3-py2.py3-none-any.whl", hash = "sha256:c001d4636cd3aecdaf33cbb40aebb59b094be2a74c556778ef5576c175e19e75"},
     {file = "parso-0.8.3.tar.gz", hash = "sha256:8c07be290bb59f03588915921e29e8a50002acaf2cdc5fa0e0114f91709fafa0"},
@@ -619,14 +588,6 @@ content_hash = "sha256:b45c4dd49cef9d4509ae178f0538de63dd0f5041ae88766d532442b3a
 "pluggy 1.0.0" = [
     {file = "pluggy-1.0.0-py2.py3-none-any.whl", hash = "sha256:74134bbf457f031a36d68416e1509f34bd5ccc019f0bcc952c7b909d06b37bd3"},
     {file = "pluggy-1.0.0.tar.gz", hash = "sha256:4224373bacce55f955a878bf9cfa763c1e360858e330072059e10bad68531159"},
-]
-"plumbum 1.7.2" = [
-    {file = "plumbum-1.7.2-py2.py3-none-any.whl", hash = "sha256:0bbf431e31da988405de2fb36c3226f09c0c9cdf69c8480f8997f4b94b7370a1"},
-    {file = "plumbum-1.7.2.tar.gz", hash = "sha256:0d1bf908076bbd0484d16412479cb97d6843069ee19f99e267e11dd980040523"},
-]
-"ply 3.11" = [
-    {file = "ply-3.11-py2.py3-none-any.whl", hash = "sha256:096f9b8350b65ebd2fd1346b12452efe5b9607f7482813ffca50c22722a807ce"},
-    {file = "ply-3.11.tar.gz", hash = "sha256:00c7c1aaa88358b9c765b6d3000c6eec0ba42abca5351b095321aef446081da3"},
 ]
 "prompt-toolkit 3.0.29" = [
     {file = "prompt_toolkit-3.0.29-py3-none-any.whl", hash = "sha256:62291dad495e665fca0bda814e342c69952086afb0f4094d0893d357e5c78752"},
@@ -655,20 +616,6 @@ content_hash = "sha256:b45c4dd49cef9d4509ae178f0538de63dd0f5041ae88766d532442b3a
 "pytest 7.1.2" = [
     {file = "pytest-7.1.2-py3-none-any.whl", hash = "sha256:13d0e3ccfc2b6e26be000cb6568c832ba67ba32e719443bfe725814d3c42433c"},
     {file = "pytest-7.1.2.tar.gz", hash = "sha256:a06a0425453864a270bc45e71f783330a7428defb4230fb5e6a731fde06ecd45"},
-]
-"pywin32 303" = [
-    {file = "pywin32-303-cp310-cp310-win32.whl", hash = "sha256:6fed4af057039f309263fd3285d7b8042d41507343cd5fa781d98fcc5b90e8bb"},
-    {file = "pywin32-303-cp310-cp310-win_amd64.whl", hash = "sha256:51cb52c5ec6709f96c3f26e7795b0bf169ee0d8395b2c1d7eb2c029a5008ed51"},
-    {file = "pywin32-303-cp311-cp311-win32.whl", hash = "sha256:d9b5d87ca944eb3aa4cd45516203ead4b37ab06b8b777c54aedc35975dec0dee"},
-    {file = "pywin32-303-cp311-cp311-win_amd64.whl", hash = "sha256:fcf44032f5b14fcda86028cdf49b6ebdaea091230eb0a757282aa656e4732439"},
-    {file = "pywin32-303-cp36-cp36m-win32.whl", hash = "sha256:aad484d52ec58008ca36bd4ad14a71d7dd0a99db1a4ca71072213f63bf49c7d9"},
-    {file = "pywin32-303-cp36-cp36m-win_amd64.whl", hash = "sha256:2a09632916b6bb231ba49983fe989f2f625cea237219530e81a69239cd0c4559"},
-    {file = "pywin32-303-cp37-cp37m-win32.whl", hash = "sha256:b1675d82bcf6dbc96363fca747bac8bff6f6e4a447a4287ac652aa4b9adc796e"},
-    {file = "pywin32-303-cp37-cp37m-win_amd64.whl", hash = "sha256:c268040769b48a13367221fced6d4232ed52f044ffafeda247bd9d2c6bdc29ca"},
-    {file = "pywin32-303-cp38-cp38-win32.whl", hash = "sha256:5f9ec054f5a46a0f4dfd72af2ce1372f3d5a6e4052af20b858aa7df2df7d355b"},
-    {file = "pywin32-303-cp38-cp38-win_amd64.whl", hash = "sha256:793bf74fce164bcffd9d57bb13c2c15d56e43c9542a7b9687b4fccf8f8a41aba"},
-    {file = "pywin32-303-cp39-cp39-win32.whl", hash = "sha256:7d3271c98434617a11921c5ccf74615794d97b079e22ed7773790822735cc352"},
-    {file = "pywin32-303-cp39-cp39-win_amd64.whl", hash = "sha256:79cbb862c11b9af19bcb682891c1b91942ec2ff7de8151e2aea2e175899cda34"},
 ]
 "pyxdg 0.27" = [
     {file = "pyxdg-0.27-py2.py3-none-any.whl", hash = "sha256:2d6701ab7c74bbab8caa6a95e0a0a129b1643cf6c298bf7c569adec06d0709a0"},
