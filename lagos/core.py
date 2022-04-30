@@ -18,8 +18,8 @@ def get_articles(*titles):
         "exsectionformat": "plain",
     }
 
-    params["titles"] = "|".join(list(map(sanitize, titles))),
-    
+    params["titles"] = ("|".join(list(map(sanitize, titles))),)
+
     if len(titles) > 1:
         params["exintro"] = True
 
@@ -31,9 +31,7 @@ def get_articles(*titles):
     return "\n".join(text.split("\n"))
 
 
-def get_page(
-    url: str, format: str = "json", params=None
-) -> Union[str, Dict, None]:
+def get_page(url: str, format: str = "json", params=None) -> Union[str, Dict, None]:
     if params is None:
         params = {"action": "raw"}
 
