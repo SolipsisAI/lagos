@@ -9,6 +9,8 @@ dependencies = [
     "requests>=2.27.1",
     "setuptools<61",
     "pandoc>=2.2",
+    "plumbum>=1.7.2",
+    "ply>=3.11",
 ]
 requires-python = ">=3.9"
 license = {text = "MIT"}
