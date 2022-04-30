@@ -1,0 +1,34 @@
+[project]
+name = "lagos"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Bitjockey", email = "bitjockey@jackpoint.network"},
+]
+dependencies = [
+    "requests>=2.27.1",
+]
+requires-python = ">=3.9"
+license = {text = "MIT"}
+
+[project.scripts]
+lagos = "lagos.cli:main"
+
+[project.optional-dependencies]
+[tool.pdm]
+[tool.pdm.dev-dependencies]
+test = [
+    "pytest>=7.1.2",
+    "responses>=0.20.0",
+]
+dev = [
+    "black>=22.3.0",
+]
+
+[tool.pdm.scripts]
+test = "pytest tests/"
+format = "black ."
+
+[build-system]
+requires = ["pdm-pep517>=0.12.0"]
+build-backend = "pdm.pep517.api"
