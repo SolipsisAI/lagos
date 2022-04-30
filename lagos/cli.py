@@ -6,7 +6,8 @@ from lagos.core import get_articles
 
 
 @click.command()
-@click.option("--title", "-t", required=True, help="The title of the article")
-def main(title):
-    article = get_articles(title)
-    print(article)
+@click.argument("titles", nargs=-1)
+def main(titles):
+    print(titles)
+    result = get_articles(*titles)
+    print(result)
