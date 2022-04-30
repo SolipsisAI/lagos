@@ -12,11 +12,16 @@ def process_sections(sections, text: str = "", exclude: str = None):
     return text
 
 
-def get_page_text(title, exclude=None) -> str:
+def get_page_text(title, flatten: bool = False, exclude=None) -> str:
     wiki = wikipediaapi.Wikipedia(
         "en",
         extract_format=wikipediaapi.ExtractFormat.WIKI,
     )
     page = wiki.page(sanitize(title))
 
-    return process_sections(page.sections, exclude=exclude)
+    text = process_sections(page.sections, exclude=exclude)
+
+    if flatten:
+        text = text.replace("\n", " ")
+
+    return text
