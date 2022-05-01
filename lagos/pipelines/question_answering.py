@@ -17,12 +17,6 @@ class QuestionAnswering(BasePipeline):
         }
         self.context = defaultdict(list)
 
-    def add_context(self, keyword, exclude=None, data_source="wiki"):
-        text = self.data_sources[data_source].get_page_text(keyword, exclude)
-        self.context[keyword].append(text)
-
-    def predict(self, question, keyword=None):
-        context = self.context.get(keyword)
-        if not context:
-            raise ValidationErr(f"{keyword} not found in context")
+    def predict(self, question, keyword):
+        context = self.get_context(keyword)
         return self.pipeline(question, " ".join(context))

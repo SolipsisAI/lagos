@@ -5,5 +5,5 @@ class BaseDataSource:
     def __init__(self, name):
         self.name = name
 
-    def get(self, keyword):
+    def get_text(self, keyword):
         raise NotImplementedError

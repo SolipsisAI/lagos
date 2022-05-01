@@ -17,8 +17,8 @@ class WikipediaDataSource(BaseDataSource):
         )
         self.flatten = flatten
 
-    def get_page_text(self, title, exclude: List[str] = None) -> str:
-        page = self.wiki.page(sanitize(title))
+    def get_text(self, keyword, exclude: List[str] = None) -> str:
+        page = self.wiki.page(sanitize(keyword))
         text = self.process_sections(page.sections, exclude=exclude)
 
         if self.flatten:
@@ -28,7 +28,7 @@ class WikipediaDataSource(BaseDataSource):
 
     def process_sections(self, sections, text: str = "", exclude: List[str] = None):
         for section in sections:
-            if exclude and section.title.lower() in exclude.lower().split("|"):
+            if exclude and section.title in exclude:
                 continue
             text += self.process_sections(section.sections, section.text, exclude)
 
