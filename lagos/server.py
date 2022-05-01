@@ -2,7 +2,6 @@ import time
 import json
 
 import asyncio
-from urllib import response
 import websockets
 
 from lagos.pipelines import load_pipeline
