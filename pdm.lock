@@ -806,6 +806,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "spacy"
+version = "3.3.0"
+extras = ["apple"]
+requires_python = ">=3.6"
+summary = "Industrial-strength Natural Language Processing (NLP) in Python"
+dependencies = [
+    "spacy",
+    "thinc-apple-ops<1.0.0,>=0.0.4",
+]
+
+[[package]]
 name = "srsly"
 version = "2.4.3"
 requires_python = ">=3.6"
@@ -918,6 +929,16 @@ dependencies = [
     "setuptools",
     "srsly<3.0.0,>=2.4.0",
     "wasabi<1.1.0,>=0.8.1",
+]
+
+[[package]]
+name = "thinc-apple-ops"
+version = "0.0.5"
+requires_python = ">=3.6"
+summary = "Improve Thinc's performance on Apple devices with native libraries"
+dependencies = [
+    "numpy>=1.21.0",
+    "thinc<9.0.0,>=8.0.13",
 ]
 
 [[package]]
@@ -1068,7 +1089,7 @@ summary = "Backport of pathlib-compatible object wrapper for zip files"
 
 [metadata]
 lock_version = "3.1"
-content_hash = "sha256:0be599ae7db79d8f5d34ad33d7a7d4878f0f1ca229cec7b0b34219b1158814a5"
+content_hash = "sha256:013b3c6d0369a600764700c9a2efc811cf005efd6f1977abf879bdf3633dcaca"
 
 [metadata.files]
 "absl-py 1.0.0" = [
@@ -2218,6 +2239,9 @@ content_hash = "sha256:0be599ae7db79d8f5d34ad33d7a7d4878f0f1ca229cec7b0b34219b11
     {file = "thinc-8.0.15-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:ecd8eab82598b079e901f16567818dc955481326c01d84b819c3c05801b97e07"},
     {file = "thinc-8.0.15-cp39-cp39-win_amd64.whl", hash = "sha256:5d98e6b3bf220c1068442d09d7c34dd8e52bbdfa43ea32f773747c5909a1c011"},
     {file = "thinc-8.0.15.tar.gz", hash = "sha256:2e315020da85c3791e191fbf37c4a2433f57cf322e27380da0cd4de99d96053b"},
+]
+"thinc-apple-ops 0.0.5" = [
+    {file = "thinc_apple_ops-0.0.5.tar.gz", hash = "sha256:d572ccecbbb77b656a56f26f750a9225c7852fc538cee795ae6d4c21fb5fe936"},
 ]
 "tokenizers 0.12.1" = [
     {file = "tokenizers-0.12.1-cp310-cp310-macosx_10_11_x86_64.whl", hash = "sha256:d737df0f8f26e093a82bfb106b6cfb510a0e9302d35834568e5b20b73ddc5a9c"},
