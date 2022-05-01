@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 def sanitize_wiki_title(title) -> str:
-    return title.replace(" ", "_")
+    return title.lower().replace(" ", "_")

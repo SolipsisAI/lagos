@@ -8,7 +8,7 @@ class BaseDataSource:
 
     def query(self, key, update: bool = False):
         if key not in self.results or update:
-            self.results[key] = self.find(self, key)
+            self.results[key] = self.find(key)
         return self.by_key(key)
 
     def find(self, key, exclude, flatten):
