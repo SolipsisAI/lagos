@@ -100,11 +100,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "bottle"
-version = "0.12.19"
-summary = "Fast and simple WSGI-framework for small web-applications."
-
-[[package]]
 name = "bpython"
 version = "0.22.1"
 requires_python = ">=3.6"
@@ -887,7 +882,7 @@ summary = "Backport of pathlib-compatible object wrapper for zip files"
 
 [metadata]
 lock_version = "3.1"
-content_hash = "sha256:d7e2cbf29cbd369c123263d3ba98a61a2a8b00d76d105528277bd9c0ac341961"
+content_hash = "sha256:8e55740259dddd9251ed3dec06728d0a826d1fc82aca26d1725ee3644366317b"
 
 [metadata.files]
 "absl-py 1.0.0" = [
@@ -1029,10 +1024,6 @@ content_hash = "sha256:d7e2cbf29cbd369c123263d3ba98a61a2a8b00d76d105528277bd9c0a
     {file = "blessings-1.7-py2-none-any.whl", hash = "sha256:caad5211e7ba5afe04367cdd4cfc68fa886e2e08f6f35e76b7387d2109ccea6e"},
     {file = "blessings-1.7-py3-none-any.whl", hash = "sha256:b1fdd7e7a675295630f9ae71527a8ebc10bfefa236b3d6aa4932ee4462c17ba3"},
     {file = "blessings-1.7.tar.gz", hash = "sha256:98e5854d805f50a5b58ac2333411b0482516a8210f23f43308baeb58d77c157d"},
-]
-"bottle 0.12.19" = [
-    {file = "bottle-0.12.19-py3-none-any.whl", hash = "sha256:f6b8a34fe9aa406f9813c02990db72ca69ce6a158b5b156d2c41f345016a723d"},
-    {file = "bottle-0.12.19.tar.gz", hash = "sha256:a9d73ffcbc6a1345ca2d7949638db46349f5b2b77dac65d6494d45c23628da2c"},
 ]
 "bpython 0.22.1" = [
     {file = "bpython-0.22.1-py3-none-any.whl", hash = "sha256:27ab07d64b9f0268990612aa5c1ab7be8705aa819b14b72c9e4b3b0418458937"},
