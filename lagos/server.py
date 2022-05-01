@@ -12,7 +12,6 @@ async def handler(websocket):
         async for message in websocket:
             # Broadcast a message to all connected clients.
             websockets.broadcast(CONNECTIONS, message)
-            await asyncio.sleep(10)
     finally:
         # Unregister.
         CONNECTIONS.remove(websocket)
