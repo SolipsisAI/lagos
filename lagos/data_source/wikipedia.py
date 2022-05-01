@@ -1,35 +1,50 @@
-from typing import List
+from typing import Any, List
 
 import wikipediaapi
 
 from lagos.data_source.base import BaseDataSource
-from lagos.utils import sanitize
+from lagos.utils import sanitize_wiki_title
 
 NAME = "wikipedia"
 
 
 class WikipediaDataSource(BaseDataSource):
-    def __init__(self, flatten: bool = True):
+    def __init__(self):
         super().__init__(NAME)
         self.wiki = wikipediaapi.Wikipedia(
             "en",
             extract_format=wikipediaapi.ExtractFormat.WIKI,
         )
-        self.flatten = flatten
 
-    def get_text(self, keyword, exclude: List[str] = None) -> str:
-        page = self.wiki.page(sanitize(keyword))
-        text = self.process_sections(page.sections, exclude=exclude)
+    def find(self, key, exclude: List[str] = None) -> str:
+        page = self.wiki.page(self.sanitize(key))
+        results = self.process_page(
+            page=page,
+            exclude=exclude,
+        )
+        return results
 
-        if self.flatten:
-            text = text.replace("\n", " ")
+    def process_page(self, page, exclude: List[str] = None):
+        root_key = self.sanitize(page.title)
+        results = []
 
-        return text
+        def process_sections(sections, key: str = "", text: str = ""):
+            for section in sections:
+                if exclude and section.title in exclude:
+                    continue
+                section_key = self.sanitize(section.title)
+                result_key = "-".join([root_key, section_key])
+                results.append(
+                    (
+                        result_key,
+                        process_sections(section.sections, section.title, section.text),
+                    )
+                )
+            return (key, text)
 
-    def process_sections(self, sections, text: str = "", exclude: List[str] = None):
-        for section in sections:
-            if exclude and section.title in exclude:
-                continue
-            text += self.process_sections(section.sections, section.text, exclude)
+        process_sections(page.sections)
 
-        return text
+        return results
+
+    def sanitize(self, key):
+        return sanitize_wiki_title(key)
