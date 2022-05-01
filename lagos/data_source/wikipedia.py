@@ -26,23 +26,25 @@ class WikipediaDataSource(BaseDataSource):
 
     def process_page(self, page, exclude: List[str] = None):
         root_key = self.sanitize(page.title)
-        results = []
+        results = {}
 
-        def process_sections(sections, key: str = "", text: str = ""):
+        def process_sections(sections, key: str, text: str = ""):
             for section in sections:
                 if exclude and section.title in exclude:
                     continue
-                section_key = self.sanitize(section.title)
-                result_key = "-".join([root_key, section_key])
-                results.append(
-                    (
-                        result_key,
-                        process_sections(section.sections, section.title, section.text),
-                    )
-                )
-            return (key, text)
 
-        process_sections(page.sections)
+                section_key = self.sanitize(section.title)
+                result_key = "|".join([key, section_key])
+
+                results[result_key] = process_sections(
+                    sections=section.sections,
+                    key=result_key,
+                    text=section.text,
+                )
+
+            return key, text
+
+        process_sections(page.sections, key=root_key)
 
         return results
 
