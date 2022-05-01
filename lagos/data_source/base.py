@@ -26,16 +26,16 @@ class BaseDataSource:
         result = self.results.get(root_key)
 
         if key not in result:
-            return result
+            return
 
         if len(key_parts) > 1:
-            result_key = "|".join(key_parts)
-
-            if not result.get(result_key):
-                result = dict(list(filter(lambda r: key in r[0], result.items())))
+            if not result.get(key):
+                result = dict(
+                    list(filter(lambda r: r[0].startswith(key), result.items()))
+                )
                 result.pop(key)
             else:
-                result = result.get(result_key)
+                result = result.get(key)
 
         return result
 
