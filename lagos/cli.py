@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import asyncio
 import click
 
-from lagos.pipelines import QuestionAnswering
+from lagos.server import app
 
 
-@click.command()
-@click.argument("title")
-@click.option("--question", "-q")
-@click.option("--exclude", "-e", default=None, help="Delimited by |")
-def main(title, question, exclude):
-    qa_model = QuestionAnswering()
-    qa_model.add_context(title, exclude=exclude)
-    answer = qa_model.predict(question=question, keyword=title)
-    print(answer)
+@click.group()
+def cli():
+    pass
+
+
+@cli.command()
+def server():
+    asyncio.run(app())

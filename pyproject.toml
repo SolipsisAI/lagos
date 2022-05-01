@@ -19,7 +19,7 @@ requires-python = ">=3.9"
 license = {text = "MIT"}
 
 [project.scripts]
-lagos = "lagos.cli:main"
+lagos = "lagos.cli:cli"
 
 [project.optional-dependencies]
 macos = [
@@ -40,6 +40,7 @@ dev = [
 ]
 
 [tool.pdm.scripts]
+# server = "watchmedo auto-restart --pattern '*.py' --recursive --signal SIGTERM python app.py"
 test = "pytest tests/"
 format = "black ."
 
