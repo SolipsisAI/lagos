@@ -13,7 +13,14 @@ def cli():
 
 @cli.command()
 @click.argument("pipeline_name")
+@click.option("--connect", "-c", default="http://localhost:8001")
+def start(pipeline_name, connect):
+    """Start chatbot"""
+    print(pipeline_name, connect)
+
+
+@cli.command()
 @click.option("--host", "-H", default="localhost", help="host")
 @click.option("--port", "-P", default=8001, help="port")
-def serve(pipeline_name, host, port):
-    asyncio.run(app(pipeline_name, host, port))
+def serve(host, port):
+    asyncio.run(app(host, port))
