@@ -15,13 +15,12 @@ async def register(websocket):
         CONNECTIONS.remove(websocket)
 
 
-async def show_time():
+async def send(message):
     while True:
-        message = datetime.datetime.utcnow().isoformat() + "Z"
         websockets.broadcast(CONNECTIONS, message)
         await asyncio.sleep(random.random() * 2 + 1)
 
 
 async def app():
     async with websockets.serve(register, "", 8001):
-        await show_time()
+        await send("Bonsoir, Elliot")
