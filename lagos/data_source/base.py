@@ -29,7 +29,8 @@ class BaseDataSource:
             result_key = result.get("|".join(key_parts))
 
             if not result.get(result_key):
-                result = dict(list(filter(lambda r: key in r, result.items())))
+                result = dict(list(filter(lambda r: key in r[0], result.items())))
+                result.pop(key)
             else:
                 result = result.get(result_key)
 
