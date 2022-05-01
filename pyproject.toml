@@ -24,6 +24,9 @@ macos = [
     "tensorflow-macos>=2.8.0",
     "tensorflow-metal>=0.4.0",
 ]
+chat = [
+    "websockets>=10.3",
+]
 [tool.pdm]
 [tool.pdm.dev-dependencies]
 test = [
