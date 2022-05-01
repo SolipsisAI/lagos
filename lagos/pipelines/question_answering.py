@@ -1,5 +1,4 @@
 from collections import defaultdict
-from xml.dom import ValidationErr
 
 from lagos.pipelines.base import BasePipeline
 from lagos.data_source.wikipedia import WikipediaDataSource
