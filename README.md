@@ -1,7 +1,20 @@
 # Lagos
 
-## Development
+- [Lagos](#lagos)
+  - [Usage](#usage)
+  - [Development Setup](#development-setup)
+    - [Visual Studio Code Integration](#visual-studio-code-integration)
+  - [Troubleshooting](#troubleshooting)
+    - [Cannot find libhdf5 on macOS when running `pdm install`](#cannot-find-libhdf5-on-macos-when-running-pdm-install)
 
+## Usage
+
+```
+# Start a websocket server that uses the conversational pipeline
+pdm run lagos serve 'conversational'
+```
+
+## Development Setup
 ```shell
 pdm install
 pdm install -G dev
