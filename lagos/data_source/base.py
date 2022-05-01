@@ -25,6 +25,9 @@ class BaseDataSource:
         root_key = key_parts[0]
         result = self.results.get(root_key)
 
+        if len(key_parts) == 1:
+            return result
+
         if key not in result:
             return
 
