@@ -16,6 +16,9 @@ class WikipediaDataSource(BaseDataSource):
             extract_format=wikipediaapi.ExtractFormat.WIKI,
         )
 
+    def query_sections(self, key, update: bool = False):
+        return list(self.query(key, update=update).keys())
+
     def find(self, key, exclude: List[str] = None) -> str:
         page = self.wiki.page(self.sanitize(key))
         results = self.process_page(
