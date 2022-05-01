@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any, Dict, List
 
 import wikipediaapi
 
@@ -17,7 +17,10 @@ class WikipediaDataSource(BaseDataSource):
         )
 
     def query_sections(self, key, update: bool = False):
-        return list(self.query(key, update=update).keys())
+        result = self.query(key, update=update)
+        if isinstance(result, Dict):
+            return list(result.keys())
+        return [key]
 
     def find(self, key, exclude: List[str] = None) -> str:
         page = self.wiki.page(self.sanitize(key))
