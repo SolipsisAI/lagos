@@ -42,7 +42,7 @@ class WikipediaDataSource(BaseDataSource):
                     text=section.text,
                 )
 
-            return key, text
+            return text
 
         process_sections(page.sections, key=root_key)
 
