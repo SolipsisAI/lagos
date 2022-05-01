@@ -40,7 +40,7 @@ dev = [
 ]
 
 [tool.pdm.scripts]
-# server = "watchmedo auto-restart --pattern '*.py' --recursive --signal SIGTERM python app.py"
+server = "watchmedo auto-restart --pattern '*.py' --recursive --signal SIGTERM lagos server"
 test = "pytest tests/"
 format = "black ."
 
