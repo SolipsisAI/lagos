@@ -8,9 +8,10 @@ from lagos.data_source.wikipedia import WikipediaDataSource
 
 
 class BasePipeline:
-    def __init__(self, name: str, options: Dict = None):
+    def __init__(self, name: str, options: Dict = None, device: int = -1):
         self.options = options
         self.options["task"] = name
+        self.options["device"] = device
         self.pipeline = pipeline(**options)
         self.data_sources = {"wiki": WikipediaDataSource()}
         self.context = defaultdict(list)

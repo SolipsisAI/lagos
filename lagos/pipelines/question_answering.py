@@ -10,8 +10,8 @@ OPTIONS = {
 
 
 class QuestionAnswering(BasePipeline):
-    def __init__(self):
-        super().__init__("question-answering", OPTIONS)
+    def __init__(self, device: int = -1):
+        super().__init__("question-answering", OPTIONS, device)
         self.data_sources = {
             "wiki": WikipediaDataSource(),
         }
