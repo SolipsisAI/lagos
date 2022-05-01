@@ -7,8 +7,8 @@ from lagos.pipelines import load_pipeline
 CONNECTIONS = set()
 
 
-def bot_handler(pipeline, message):
-    _, conversation = pipeline.predict(text=message)
+def bot_handler(pipeline, event):
+    _, conversation = pipeline.predict(text=event["text"])
     return conversation.generated_responses[-1]
 
 
@@ -17,14 +17,28 @@ def handler_wrapper(pipeline_name):
 
     async def handler(websocket):
         CONNECTIONS.add(websocket)
-        conversation_id = None
 
         try:
             async for message in websocket:
+                event = json.loads(message)
+
                 # Broadcast a message to all connected clients.
                 websockets.broadcast(CONNECTIONS, message)
-                response = bot_handler(pipeline, message)
-                websockets.broadcast(CONNECTIONS, response)
+
+                # Show typing
+                # TODO: Add a slight, random delay
+                websockets.broadcast(CONNECTIONS, json.dumps({
+                    "user": "chatbot",
+                    "is_typing": True
+                }))
+
+                # Chatbot
+                response_text = bot_handler(pipeline, event)
+                websockets.broadcast(CONNECTIONS, json.dumps({
+                    "user": "chatbot",
+                    "text": response_text,
+                    "is_typing": False,
+                }))
         finally:
             # Unregister.
             CONNECTIONS.remove(websocket)

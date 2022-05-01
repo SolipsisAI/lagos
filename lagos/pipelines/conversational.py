@@ -11,7 +11,7 @@ OPTIONS = {
 
 class Conversational(BasePipeline):
     def __init__(self, device: int = -1):
-        super().__init__("conversational", OPTIONS, device)
+        super().__init__(name="conversational", options=OPTIONS, device=device)
         self.context = {}
 
     def add_context(self, conversation_id: str, text: str):

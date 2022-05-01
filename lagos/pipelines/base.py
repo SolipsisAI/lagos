@@ -9,7 +9,7 @@ from lagos.data_source import load_data_source
 
 class BasePipeline:
     def __init__(
-        self, name: str, data_sources: List[str], options: Dict = None, device: int = -1
+        self, name: str, data_sources: List[str] = None, options: Dict = None, device: int = -1
     ):
         self.options = options
         self.options["task"] = name
@@ -20,6 +20,9 @@ class BasePipeline:
         self.load_data_sources(data_sources)
 
     def load_data_sources(self, data_sources: List[str]):
+        if not data_sources:
+            return
+
         for data_source in data_sources:
             self.data_sources[data_source] = load_data_source(data_source)
 
