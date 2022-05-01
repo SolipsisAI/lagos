@@ -38,9 +38,7 @@ dev = [
     "black>=22.3.0",
     "bpython>=0.22.1",
     "watchdog[watchmedo]>=2.1.7",
-    "ipython>=8.3.0",
-    "jupyterlab>=3.3.4",
-]
+    "ipython>=8.3.0"]
 
 [tool.pdm.scripts]
 conversational = "watchmedo auto-restart --pattern '*.py' --recursive --signal SIGTERM lagos serve 'conversational'"
