@@ -39,4 +39,3 @@ async def bot(pipeline_name, connect_url):
             event = json.loads(message)
             if event["user"] != BOT_USER:
                 await bot_handler(websocket, pipeline, event)
-            await websocket.recv()
