@@ -7,7 +7,8 @@ class BaseDataSource:
         self.results = {}
 
     def query(self, key, update: bool = False):
-        key_parts = self.sanitize(key).split("|")
+        key = self.sanitize(key)
+        key_parts = key.split("|")
         root_key = key_parts[0]
 
         if root_key not in self.results or update:
@@ -19,13 +20,20 @@ class BaseDataSource:
         raise NotImplementedError
 
     def by_key(self, key):
-        key_parts = self.sanitize(key).split("|")
+        key = self.sanitize(key)
+        key_parts = key.split("|")
         root_key = key_parts[0]
+        result = self.results.get(root_key)
 
-        if len(key_parts) == 1:
-            return self.results.get(root_key)
+        if len(key_parts) > 1:
+            result_key = result.get("|".join(key_parts))
 
-        return self.results.get(root_key, {}).get("|".join(key_parts))
+            if not result.get(result_key):
+                result = dict(list(filter(lambda r: key in r, result.items())))
+            else:
+                result = result.get(result_key)
+
+        return result
 
     def sanitize(self, key):
         raise NotImplementedError
