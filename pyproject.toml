@@ -14,7 +14,9 @@ dependencies = [
     "datasets>=1.18.3",
     "wikipedia-api>=0.5.4",
     "websockets>=10.3",
-    "python-dotenv>=0.20.0"]
+    "python-dotenv>=0.20.0",
+    "en-core-web-md @ file:///${PROJECT_ROOT}/en_core_web_md-3.3.0-py3-none-any.whl",
+]
 requires-python = ">=3.9"
 license = {text = "MIT"}
 
@@ -40,6 +42,7 @@ dev = [
     "ipython>=8.3.0"]
 
 [tool.pdm.scripts]
+download-spacy-models = "curl -L -O https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.3.0/en_core_web_md-3.3.0-py3-none-any.whl"
 conversational = "watchmedo auto-restart --pattern '*.py' --recursive --signal SIGTERM lagos serve 'conversational'"
 test = "pytest tests/"
 format = "black ."

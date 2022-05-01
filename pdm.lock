@@ -213,6 +213,15 @@ requires_python = ">=2.7, !=3.0.*"
 summary = "serialize all of python"
 
 [[package]]
+name = "en-core-web-md"
+version = "3.3.0"
+url = "file:///${PROJECT_ROOT}/en_core_web_md-3.3.0-py3-none-any.whl"
+summary = "English pipeline optimized for CPU. Components: tok2vec, tagger, parser, senter, ner, attribute_ruler, lemmatizer."
+dependencies = [
+    "spacy<3.4.0,>=3.3.0.dev0",
+]
+
+[[package]]
 name = "executing"
 version = "0.8.3"
 summary = "Get the currently executing AST node of a frame, and other information"
@@ -812,7 +821,7 @@ extras = ["apple"]
 requires_python = ">=3.6"
 summary = "Industrial-strength Natural Language Processing (NLP) in Python"
 dependencies = [
-    "spacy",
+    "spacy>=3.3.0",
     "thinc-apple-ops<1.0.0,>=0.0.4",
 ]
 
@@ -1089,7 +1098,7 @@ summary = "Backport of pathlib-compatible object wrapper for zip files"
 
 [metadata]
 lock_version = "3.1"
-content_hash = "sha256:013b3c6d0369a600764700c9a2efc811cf005efd6f1977abf879bdf3633dcaca"
+content_hash = "sha256:b76e34845c96535766a3e9f66cfb581bdc6b7d354cfd0db94158dad0869006b2"
 
 [metadata.files]
 "absl-py 1.0.0" = [
