@@ -1,4 +1,3 @@
-from argparse import ArgumentError
 from .question_answering import QuestionAnswering
 from .summarization import Summarization
 from .conversational import Conversational
@@ -12,5 +11,5 @@ PIPELINES = {
 
 def load_pipeline(name):
     if name not in PIPELINES:
-        raise ArgumentError(f"Pipeline {name} not found")
+        raise ValueError(f"Pipeline {name} not found")
     return PIPELINES[name]()
