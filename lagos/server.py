@@ -19,4 +19,5 @@ async def handler(websocket):
 
 async def app(host = "", port: int = 8001):
     async with websockets.serve(handler, host, port):
+        print(f"Connect to: ws://{host}:{port}")
         await asyncio.Future()  # run5eva
