@@ -12,9 +12,7 @@ async def bot_handler(websocket, pipeline, event, bot_id):
     response_text = conversation.generated_responses[-1]
 
     # Show typing
-    await websocket.send(
-        json.dumps({"user_id": bot_id, "is_typing": True})
-    )
+    await websocket.send(json.dumps({"user_id": bot_id, "is_typing": True}))
     num_tokens = len(response_text)
     time.sleep(0.1 * num_tokens)
 
@@ -37,4 +35,6 @@ async def bot(pipeline_name, connect_url):
         async for message in websocket:
             event = json.loads(message)
             if event.get("user_id") != bot_id and "text" in event:
-                await bot_handler(websocket, pipeline=pipeline, event=event, bot_id=bot_id)
+                await bot_handler(
+                    websocket, pipeline=pipeline, event=event, bot_id=bot_id
+                )
