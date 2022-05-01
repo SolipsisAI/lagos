@@ -19,4 +19,4 @@ class QuestionAnswering(BasePipeline):
 
     def predict(self, question, keyword):
         context = self.get_context(keyword)
-        return self.pipeline(question, " ".join(context))
+        return self.pipeline(question, context)

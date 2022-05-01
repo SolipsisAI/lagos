@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List, Union
 from collections import defaultdict
 from xml.dom import ValidationErr
 
@@ -12,10 +12,13 @@ class BasePipeline:
         self.options = options
         self.options["task"] = name
         self.pipeline = pipeline(**options)
-        self.data_sources = {
-            "wiki": WikipediaDataSource()
-        }
+        self.data_sources = {"wiki": WikipediaDataSource()}
         self.context = defaultdict(list)
+
+    def add_raw_context(self, keyword, context: Union[str, List]):
+        if isinstance(context, list):
+            context = " ".join(context)
+        self.context[keyword].append(context)
 
     def add_context(self, keyword, exclude=None, data_source="wiki"):
         text = self.data_sources[data_source].get_text(keyword, exclude)
@@ -24,4 +27,4 @@ class BasePipeline:
     def get_context(self, keyword):
         if keyword not in self.context:
             raise ValidationErr(f"{keyword} not found in context")
-        return self.context[keyword]
+        return " ".join(self.context[keyword])
