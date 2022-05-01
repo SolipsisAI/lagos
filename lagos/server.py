@@ -2,22 +2,38 @@ import json
 import asyncio
 import websockets
 
+from lagos.pipelines import load_pipeline
 
 CONNECTIONS = set()
 
 
-async def handler(websocket):
-    CONNECTIONS.add(websocket)
-    try:
-        async for message in websocket:
-            # Broadcast a message to all connected clients.
-            websockets.broadcast(CONNECTIONS, message)
-    finally:
-        # Unregister.
-        CONNECTIONS.remove(websocket)
+def bot_handler(pipeline, conversation_id, message):
+    conversation_id, conversation = pipeline.predict(conversation_id, message)
+    return conversation_id, conversation.generated_responses[-1] 
 
 
-async def app(host = "", port: int = 8001):
-    async with websockets.serve(handler, host, port):
+def handler_wrapper(pipeline_name):
+    pipeline = load_pipeline(pipeline_name)
+
+    async def handler(websocket):
+        CONNECTIONS.add(websocket)
+        conversation_id = None
+
+        try:
+            async for message in websocket:
+                # Broadcast a message to all connected clients.
+                websockets.broadcast(CONNECTIONS, message)
+                conversation_id, response = bot_handler(pipeline, conversation_id, message)
+                websockets.broadcast(CONNECTIONS, response)
+        finally:
+            # Unregister.
+            CONNECTIONS.remove(websocket)
+    
+    return handler
+
+
+async def app(pipeline_name, host = "", port: int = 8001):
+    print(f"MODEL: {pipeline_name}")
+    async with websockets.serve(handler_wrapper(pipeline_name), host, port):
         print(f"Connect to: ws://{host}:{port}")
         await asyncio.Future()  # run5eva

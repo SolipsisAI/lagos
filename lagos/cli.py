@@ -12,7 +12,8 @@ def cli():
 
 
 @cli.command()
+@click.argument("pipeline_name")
 @click.option("--host", "-H", default="localhost", help="host")
 @click.option("--port", "-P", default=8001, help="port")
-def server(host, port):
-    asyncio.run(app(host, port))
+def serve(pipeline_name, host, port):
+    asyncio.run(app(pipeline_name, host, port))

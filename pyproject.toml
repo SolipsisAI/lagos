@@ -41,7 +41,7 @@ dev = [
 ]
 
 [tool.pdm.scripts]
-server = "watchmedo auto-restart --pattern '*.py' --recursive --signal SIGTERM lagos server"
+conversational = "watchmedo auto-restart --pattern '*.py' --recursive --signal SIGTERM lagos serve 'conversational'"
 test = "pytest tests/"
 format = "black ."
 
