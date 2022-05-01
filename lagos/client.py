@@ -1,21 +1,19 @@
 import time
 import json
 
-import asyncio
 import websockets
+from uuid import uuid4
 
 from lagos.pipelines import load_pipeline
 
-BOT_USER = "chatbot"
 
-
-async def bot_handler(websocket, pipeline, event):
+async def bot_handler(websocket, pipeline, event, bot_id):
     _, conversation = pipeline.predict(text=event["text"])
     response_text = conversation.generated_responses[-1]
 
     # Show typing
     await websocket.send(
-        json.dumps({"user": BOT_USER, "is_typing": True})
+        json.dumps({"user_id": bot_id, "is_typing": True})
     )
     num_tokens = len(response_text)
     time.sleep(0.1 * num_tokens)
@@ -24,7 +22,7 @@ async def bot_handler(websocket, pipeline, event):
     await websocket.send(
         json.dumps(
             {
-                "user": BOT_USER,
+                "user_id": bot_id,
                 "text": response_text,
                 "is_typing": False,
             }
@@ -34,8 +32,9 @@ async def bot_handler(websocket, pipeline, event):
 
 async def bot(pipeline_name, connect_url):
     pipeline = load_pipeline(pipeline_name)
+    bot_id = str(uuid4())
     async with websockets.connect(connect_url) as websocket:
         async for message in websocket:
             event = json.loads(message)
-            if event["user"] != BOT_USER:
-                await bot_handler(websocket, pipeline, event)
+            if event.get("user_id") != bot_id and "text" in event:
+                await bot_handler(websocket, pipeline=pipeline, event=event, bot_id=bot_id)
