@@ -9,7 +9,11 @@ from lagos.data_source import load_data_source
 
 class BasePipeline:
     def __init__(
-        self, name: str, data_sources: List[str] = None, options: Dict = None, device: int = -1
+        self,
+        name: str,
+        data_sources: List[str] = None,
+        options: Dict = None,
+        device: int = -1,
     ):
         self.options = options
         self.options["task"] = name

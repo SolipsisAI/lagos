@@ -1,5 +1,8 @@
+import time
 import json
+
 import asyncio
+from urllib import response
 import websockets
 
 from lagos.pipelines import load_pipeline
@@ -9,7 +12,26 @@ CONNECTIONS = set()
 
 def bot_handler(pipeline, event):
     _, conversation = pipeline.predict(text=event["text"])
-    return conversation.generated_responses[-1]
+    response_text = conversation.generated_responses[-1]
+
+    # Show typing
+    websockets.broadcast(
+        CONNECTIONS, json.dumps({"user": "chatbot", "is_typing": True})
+    )
+    num_tokens = len(response_text)
+    time.sleep(0.1 * num_tokens)
+
+    # Chatbot
+    websockets.broadcast(
+        CONNECTIONS,
+        json.dumps(
+            {
+                "user": "chatbot",
+                "text": response_text,
+                "is_typing": False,
+            }
+        ),
+    )
 
 
 def handler_wrapper(pipeline_name):
@@ -25,20 +47,7 @@ def handler_wrapper(pipeline_name):
                 # Broadcast a message to all connected clients.
                 websockets.broadcast(CONNECTIONS, message)
 
-                # Show typing
-                # TODO: Add a slight, random delay
-                websockets.broadcast(CONNECTIONS, json.dumps({
-                    "user": "chatbot",
-                    "is_typing": True
-                }))
-
-                # Chatbot
-                response_text = bot_handler(pipeline, event)
-                websockets.broadcast(CONNECTIONS, json.dumps({
-                    "user": "chatbot",
-                    "text": response_text,
-                    "is_typing": False,
-                }))
+                bot_handler(pipeline, event=event)
         finally:
             # Unregister.
             CONNECTIONS.remove(websocket)
