@@ -27,5 +27,10 @@ class BasePipeline:
 
     def get_context(self, keyword):
         if keyword not in self.context:
-            raise ValidationErr(f"{keyword} not found in context")
+            raise ValidationErr(f"{keyword} not found")
         return " ".join(self.context[keyword])
+
+    def remove_context(self, keyword):
+        if keyword not in self.context:
+            raise ValidationErr(f"{keyword} not found")
+        return self.context.pop(keyword)
