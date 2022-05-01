@@ -1,13 +1,27 @@
 import asyncio
+import datetime
+import random
 import websockets
 
 
-async def handler(websocket):
+CONNECTIONS = set()
+
+
+async def register(websocket):
+    CONNECTIONS.add(websocket)
+    try:
+        await websocket.wait_closed()
+    finally:
+        CONNECTIONS.remove(websocket)
+
+
+async def show_time():
     while True:
-        message = await websocket.recv()
-        print(message)
+        message = datetime.datetime.utcnow().isoformat() + "Z"
+        websockets.broadcast(CONNECTIONS, message)
+        await asyncio.sleep(random.random() * 2 + 1)
 
 
 async def app():
-    async with websockets.serve(handler, "", 8001):
-        await asyncio.Future()  # run forever
+    async with websockets.serve(register, "", 8001):
+        await show_time()
