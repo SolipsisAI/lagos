@@ -17,6 +17,6 @@ async def handler(websocket):
         CONNECTIONS.remove(websocket)
 
 
-async def app():
-    async with websockets.serve(handler, "", 8001):
+async def app(host = "", port: int = 8001):
+    async with websockets.serve(handler, host, port):
         await asyncio.Future()  # run5eva

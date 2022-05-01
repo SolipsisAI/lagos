@@ -591,6 +591,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "python-dotenv"
+version = "0.20.0"
+requires_python = ">=3.5"
+summary = "Read key-value pairs from a .env file and set them as environment variables"
+
+[[package]]
 name = "pytz"
 version = "2022.1"
 summary = "World timezone definitions, modern and historical"
@@ -899,7 +905,7 @@ summary = "Backport of pathlib-compatible object wrapper for zip files"
 
 [metadata]
 lock_version = "3.1"
-content_hash = "sha256:70348cd5c35ad5f02052e91b60241a473800d9e3bf78dc00db72e7ddec98662a"
+content_hash = "sha256:73787ac6186261ada20af0199937b12ed36a9ad6080f5abda1f23d1e6b11f04a"
 
 [metadata.files]
 "absl-py 1.0.0" = [
@@ -1647,6 +1653,10 @@ content_hash = "sha256:70348cd5c35ad5f02052e91b60241a473800d9e3bf78dc00db72e7dde
 "python-dateutil 2.8.2" = [
     {file = "python_dateutil-2.8.2-py2.py3-none-any.whl", hash = "sha256:961d03dc3453ebbc59dbdea9e4e11c5651520a876d0f4db161e8674aae935da9"},
     {file = "python-dateutil-2.8.2.tar.gz", hash = "sha256:0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86"},
+]
+"python-dotenv 0.20.0" = [
+    {file = "python_dotenv-0.20.0-py3-none-any.whl", hash = "sha256:d92a187be61fe482e4fd675b6d52200e7be63a12b724abbf931a40ce4fa92938"},
+    {file = "python-dotenv-0.20.0.tar.gz", hash = "sha256:b7e3b04a59693c42c36f9ab1cc2acc46fa5df8c78e178fc33a8d4cd05c8d498f"},
 ]
 "pytz 2022.1" = [
     {file = "pytz-2022.1-py2.py3-none-any.whl", hash = "sha256:e68985985296d9a66a881eb3193b0906246245294a881e7c8afe623866ac6a5c"},

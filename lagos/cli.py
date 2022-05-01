@@ -12,5 +12,7 @@ def cli():
 
 
 @cli.command()
-def server():
-    asyncio.run(app())
+@click.option("--host", "-H", default="", help="host")
+@click.option("--port", "-P", default=8001, help="port")
+def server(host, port):
+    asyncio.run(app(host, port))
