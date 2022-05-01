@@ -4,6 +4,7 @@ import asyncio
 import click
 
 from lagos.server import app
+from lagos.client import bot
 
 
 @click.group()
@@ -13,14 +14,15 @@ def cli():
 
 @cli.command()
 @click.argument("pipeline_name")
-@click.option("--connect", "-c", default="http://localhost:8001")
+@click.option("--connect", "-c", default="ws://localhost:8001")
 def start(pipeline_name, connect):
     """Start chatbot"""
-    print(pipeline_name, connect)
+    asyncio.run(bot(pipeline_name, connect_url=connect))
 
 
 @cli.command()
 @click.option("--host", "-H", default="localhost", help="host")
 @click.option("--port", "-P", default=8001, help="port")
 def serve(host, port):
+    """Start websocket"""
     asyncio.run(app(host, port))
