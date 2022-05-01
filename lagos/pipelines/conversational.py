@@ -3,7 +3,7 @@ from transformers import Conversation
 from .base import BasePipeline
 
 OPTIONS = {
-    "model": "microsoft/DialoGPT-medium",
+    "model": "microsoft/DialoGPT-large",
 }
 
 
