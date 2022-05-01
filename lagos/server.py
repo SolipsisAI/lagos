@@ -1,26 +1,23 @@
+import json
 import asyncio
-import datetime
-import random
 import websockets
 
 
 CONNECTIONS = set()
 
 
-async def register(websocket):
+async def handler(websocket):
     CONNECTIONS.add(websocket)
     try:
-        await websocket.wait_closed()
+        async for message in websocket:
+            # Broadcast a message to all connected clients.
+            websockets.broadcast(CONNECTIONS, message)
+            await asyncio.sleep(10)
     finally:
+        # Unregister.
         CONNECTIONS.remove(websocket)
 
 
-async def send(message):
-    while True:
-        websockets.broadcast(CONNECTIONS, message)
-        await asyncio.sleep(random.random() * 2 + 1)
-
-
 async def app():
-    async with websockets.serve(register, "", 8001):
-        await send("Bonsoir, Elliot")
+    async with websockets.serve(handler, "", 8001):
+        await asyncio.Future()  # run5eva
