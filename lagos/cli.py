@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import click
 
-from lagos.core import ask
+from lagos.pipelines import QuestionAnswering
 
 
 @click.command()
@@ -10,4 +10,7 @@ from lagos.core import ask
 @click.option("--question", "-q")
 @click.option("--exclude", "-e", default=None, help="Delimited by |")
 def main(title, question, exclude):
-    ask(title, question=question, exclude=exclude)
+    qa_model = QuestionAnswering()
+    qa_model.add_context(title, exclude=exclude)
+    answer = qa_model.predict(question=question, keyword=title) 
+    print(answer)
