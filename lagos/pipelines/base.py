@@ -1,6 +1,6 @@
+from argparse import ArgumentError
 from typing import Dict, List, Union
 from collections import defaultdict
-from xml.dom import ValidationErr
 
 from transformers import pipeline, Conversation
 
@@ -27,12 +27,12 @@ class BasePipeline:
 
     def get_context(self, keyword, flatten: bool = True):
         if keyword not in self.context:
-            raise ValidationErr(f"{keyword} not found")
+            raise ArgumentError(f"{keyword} not found")
         if flatten:
             return " ".join(self.context[keyword])
         return self.context[keyword]
 
     def remove_context(self, keyword):
         if keyword not in self.context:
-            raise ValidationErr(f"{keyword} not found")
+            raise ArgumentError(f"{keyword} not found")
         return self.context.pop(keyword)
