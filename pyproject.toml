@@ -9,13 +9,9 @@ dependencies = [
     "requests>=2.27.1",
     "setuptools<61",
     "click>=8.1.3",
-    "tokenizers>=0.12.1",
-    "transformers>=4.18.0",
-    "datasets>=1.18.3",
     "wikipedia-api>=0.5.4",
     "websockets>=10.3",
     "python-dotenv>=0.20.0",
-    "en-core-web-md @ file:///${PROJECT_ROOT}/en_core_web_md-3.3.0-py3-none-any.whl",
 ]
 requires-python = ">=3.9"
 license = {text = "MIT"}
@@ -28,6 +24,11 @@ macos = [
     "tensorflow-macos>=2.8.0",
     "tensorflow-metal>=0.4.0",
     "spacy[apple]>=3.3.0",
+]
+nlp = [
+    "tokenizers>=0.12.1",
+    "transformers>=4.18.0",
+    "datasets>=1.18.3",
 ]
 [tool.pdm]
 [tool.pdm.dev-dependencies]

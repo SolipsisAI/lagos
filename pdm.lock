@@ -213,15 +213,6 @@ requires_python = ">=2.7, !=3.0.*"
 summary = "serialize all of python"
 
 [[package]]
-name = "en-core-web-md"
-version = "3.3.0"
-url = "file:///${PROJECT_ROOT}/en_core_web_md-3.3.0-py3-none-any.whl"
-summary = "English pipeline optimized for CPU. Components: tok2vec, tagger, parser, senter, ner, attribute_ruler, lemmatizer."
-dependencies = [
-    "spacy<3.4.0,>=3.3.0.dev0",
-]
-
-[[package]]
 name = "executing"
 version = "0.8.3"
 summary = "Get the currently executing AST node of a frame, and other information"
@@ -1098,7 +1089,7 @@ summary = "Backport of pathlib-compatible object wrapper for zip files"
 
 [metadata]
 lock_version = "3.1"
-content_hash = "sha256:b76e34845c96535766a3e9f66cfb581bdc6b7d354cfd0db94158dad0869006b2"
+content_hash = "sha256:822482634d67b33e0eb1ebd925a4f3a5e1f7a0d01544fac75f1b83b8f7ded749"
 
 [metadata.files]
 "absl-py 1.0.0" = [
