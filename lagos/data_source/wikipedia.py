@@ -22,7 +22,7 @@ class WikipediaDataSource(BaseDataSource):
             return list(result.keys())
         return [key]
 
-    def find(self, key, exclude: List[str] = None) -> str:
+    def find(self, key, exclude=None):
         page = self.wiki.page(self.sanitize(key))
         results = self.process_page(
             page=page,
@@ -30,7 +30,7 @@ class WikipediaDataSource(BaseDataSource):
         )
         return results
 
-    def process_page(self, page, exclude: List[str] = None):
+    def process_page(self, page, exclude=None):
         root_key = self.sanitize(page.title)
         results = {}
 
