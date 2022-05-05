@@ -16,7 +16,7 @@ class BaseDataSource:
 
         return self.by_key(key)
 
-    def find(self, key, exclude, flatten):
+    def find(self, key, exclude=None):
         raise NotImplementedError
 
     def by_key(self, key):
@@ -24,6 +24,9 @@ class BaseDataSource:
         key_parts = key.split("|")
         root_key = key_parts[0]
         result = self.results.get(root_key)
+
+        if not result:
+            return
 
         if len(key_parts) == 1:
             return result
