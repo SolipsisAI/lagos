@@ -48,6 +48,9 @@ conversational = "watchmedo auto-restart --pattern '*.py' --recursive --signal S
 test = "pytest tests/"
 format = "black ."
 
+[tool.pyright]
+extraPaths = ["__pypackages__/<major.minor>/lib/"]
+
 [build-system]
 requires = ["pdm-pep517>=0.12.0"]
 build-backend = "pdm.pep517.api"
