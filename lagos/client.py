@@ -37,6 +37,7 @@ async def bot(pipeline_name, connect_url, model=None):
         async for message in websocket:
             event = json.loads(message)
             if event.get("user_id") != bot_id and "text" in event:
+                # TODO: Use a queue
                 time.sleep(random.randint(1,10))
                 await bot_handler(
                     websocket, pipeline=pipeline, event=event, bot_id=bot_id
