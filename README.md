@@ -27,6 +27,8 @@ The model here is whatever transformers dialogpt model you've fine-tuned. So in 
 ## Development Setup
 ```shell
 pdm install
+pdm install -G pytorch
+pdm install -G nlp
 pdm install -G dev
 
 # Install dependencies for macos
