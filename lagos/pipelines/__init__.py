@@ -9,7 +9,7 @@ PIPELINES = {
 }
 
 
-def load_pipeline(name):
+def load_pipeline(name, model):
     if name not in PIPELINES:
         raise ValueError(f"Pipeline {name} not found")
-    return PIPELINES[name]()
+    return PIPELINES[name](model=model)

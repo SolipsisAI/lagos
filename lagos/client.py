@@ -28,9 +28,10 @@ async def bot_handler(websocket, pipeline, event, bot_id):
     )
 
 
-async def bot(pipeline_name, connect_url):
-    pipeline = load_pipeline(pipeline_name)
+async def bot(pipeline_name, connect_url, model=None):
+    pipeline = load_pipeline(pipeline_name, model=model)
     bot_id = str(uuid4())
+    print(f"Loading {pipeline_name} ({model}) -> connecting to {connect_url}")
     async with websockets.connect(connect_url) as websocket:
         async for message in websocket:
             event = json.loads(message)

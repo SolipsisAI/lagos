@@ -4,14 +4,12 @@ from transformers import Conversation
 
 from .base import BasePipeline
 
-OPTIONS = {
-    "model": "microsoft/DialoGPT-large",
-}
-
 
 class Conversational(BasePipeline):
-    def __init__(self, device: int = -1):
-        super().__init__(name="conversational", options=OPTIONS, device=device)
+    def __init__(self, model: str = None, device: int = -1):
+        if model is None:
+            model = "microsoft/DialoGPT-large"
+        super().__init__(name="conversational", options={"model": model}, device=device)
         self.context = {}
 
     def add_context(self, conversation_id: str, text: str):
