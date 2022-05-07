@@ -25,6 +25,11 @@ macos = [
     "tensorflow-metal>=0.4.0",
     "spacy[apple]>=3.3.0",
 ]
+pytorch = [
+    "torch==1.9.0",
+    "torchvision==0.10.0",
+    "torchaudio==0.9.0",
+]
 nlp = [
     "tokenizers>=0.12.1",
     "transformers>=4.18.0",
