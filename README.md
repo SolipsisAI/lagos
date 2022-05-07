@@ -9,10 +9,20 @@
 
 ## Usage
 
+Start the websocket:
+
 ```
-# Start a websocket server that uses the conversational pipeline
-pdm run lagos serve 'conversational'
+# Start a websocket server
+pdm run lagos serve
 ```
+
+Then, load the chatbot client with the specified model:
+
+```
+pdm run lagos start -m "models/mybot-output"
+```
+
+The model here is whatever transformers dialogpt model you've fine-tuned. So in my case, I previously did fine-tuning on `dialogpt-small` using chat logs from a Discord channel...
 
 ## Development Setup
 ```shell
