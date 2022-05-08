@@ -1,0 +1,23 @@
+services:
+  websocket:
+    build: .
+    image: solipsisai/websocket:latest
+    command: lagos serve -H 0.0.0.0 -P 8001
+    ports:
+      - "8001:8001"
+    networks:
+      - ws-net
+
+  chatbot:
+    image: solipsisai/websocket:latest
+    depends_on:
+      - websocket
+    command: lagos start -m "models/output-small" -c "ws://websocket:8001"
+    volumes:
+      - ./models:/app/models
+    networks:
+      - ws-net
+
+networks:
+  # The presence of these objects is sufficient to define them
+  ws-net: {}
