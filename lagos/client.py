@@ -9,7 +9,8 @@ from lagos.pipelines import load_pipeline
 
 
 async def bot_handler(websocket, pipeline, event, bot_id):
-    _, conversation = pipeline.predict(text=event["text"])
+    conversation_id = event.get("conversation_id")
+    conversation_id, conversation = pipeline.predict(conversation_id=conversation_id, text=event["text"])
     response_text = conversation.generated_responses[-1]
 
     # Show typing
@@ -21,6 +22,7 @@ async def bot_handler(websocket, pipeline, event, bot_id):
     await websocket.send(
         json.dumps(
             {
+                "conversation_id": conversation_id,
                 "user_id": bot_id,
                 "text": response_text,
                 "is_typing": False,
