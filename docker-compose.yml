@@ -12,7 +12,7 @@ services:
     image: solipsisai/websocket:latest
     depends_on:
       - websocket
-    command: python -m lagos start -m "models/output-small" -c "ws://websocket:8001"
+    command: python -m lagos start -m "models/${MODEL_NAME}" -c "ws://websocket:8001"
     volumes:
       - ${MODELS_DIR}:/app/models
     networks:
