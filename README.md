@@ -2,6 +2,7 @@
 
 - [Lagos](#lagos)
   - [Usage](#usage)
+  - [(Recommended) Docker](#recommended-docker)
   - [Development Setup](#development-setup)
     - [Visual Studio Code Integration](#visual-studio-code-integration)
   - [Troubleshooting](#troubleshooting)
@@ -23,6 +24,29 @@ pdm run lagos start -m "models/mybot-output"
 ```
 
 The model here is whatever transformers dialogpt model you've fine-tuned. So in my case, I previously did fine-tuning on `dialogpt-small` using chat logs from a Discord channel...
+
+## (Recommended) Docker
+
+To use the docker setup, you need to have a `docker/.env` setup with the `MODELS_DIR` set to the location of the models.
+
+Example:
+
+```
+MODELS_DIR=~/Projects/SolipsisAI/research/models
+```
+
+Then build and run:
+
+```
+docker-compose -f docker/docker-compose.yml build
+docker-compose -f docker/docker-compose.yml up
+```
+
+You can point to a different env file with `--env-file`:
+
+```
+docker-compose --env-file .env.development -f docker/docker-compose.yml up
+```
 
 ## Development Setup
 ```shell
