@@ -27,7 +27,7 @@ The model here is whatever transformers dialogpt model you've fine-tuned. So in 
 
 ## (Recommended) Docker
 
-To use the docker setup, you need to have a `docker/.env` setup with the `MODELS_DIR` set to the location of the models.
+To use the docker setup, you need to have a `.env` setup with the `MODELS_DIR` set to the location of the models.
 
 Example:
 
@@ -38,14 +38,20 @@ MODELS_DIR=~/Projects/SolipsisAI/research/models
 Then build and run:
 
 ```
-docker-compose -f docker/docker-compose.yml build
-docker-compose -f docker/docker-compose.yml up
+docker-compose build
+docker-compose up
 ```
 
 You can point to a different env file with `--env-file`:
 
 ```
-docker-compose --env-file .env.development -f docker/docker-compose.yml up
+docker-compose --env-file .env.development up
+```
+
+To bring containers down:
+
+```
+docker-compose down
 ```
 
 ## Development Setup

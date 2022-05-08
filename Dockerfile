@@ -16,5 +16,7 @@ RUN pdm install --prod --no-lock --no-editable
 FROM python:3.10
 
 # retrieve packages from build stage
-ENV PYTHONPATH=/project/pkgs
-COPY --from=builder /project/__pypackages__/3.10/lib /project/pkgs
+ENV PYTHONPATH=/app/pkgs
+COPY --from=builder /project/__pypackages__/3.10/lib /app/pkgs
+
+WORKDIR /app

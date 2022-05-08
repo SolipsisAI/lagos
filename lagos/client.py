@@ -10,7 +10,9 @@ from lagos.pipelines import load_pipeline
 
 async def bot_handler(websocket, pipeline, event, bot_id):
     conversation_id = event.get("conversation_id")
-    conversation_id, conversation = pipeline.predict(conversation_id=conversation_id, text=event["text"])
+    conversation_id, conversation = pipeline.predict(
+        conversation_id=conversation_id, text=event["text"]
+    )
     response_text = conversation.generated_responses[-1]
 
     # Show typing
@@ -40,7 +42,7 @@ async def bot(pipeline_name, connect_url, model=None):
             event = json.loads(message)
             if event.get("user_id") != bot_id and "text" in event:
                 # TODO: Use a queue
-                time.sleep(random.randint(1,10))
+                time.sleep(random.randint(1, 10))
                 await bot_handler(
                     websocket, pipeline=pipeline, event=event, bot_id=bot_id
                 )
