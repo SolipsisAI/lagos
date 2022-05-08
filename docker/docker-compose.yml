@@ -14,10 +14,9 @@ services:
       - websocket
     command: lagos start -m "models/output-small" -c "ws://websocket:8001"
     volumes:
-      - ./models:/app/models
+      - ${MODELS_DIR}:/app/models
     networks:
       - ws-net
 
 networks:
-  # The presence of these objects is sufficient to define them
   ws-net: {}
