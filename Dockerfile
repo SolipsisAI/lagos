@@ -20,3 +20,5 @@ ENV PYTHONPATH=/app/pkgs
 COPY --from=builder /project/__pypackages__/3.10/lib /app/pkgs
 
 WORKDIR /app
+
+CMD [ "python", "-m", "lagos", "serve", "-H", "0.0.0.0" ]
