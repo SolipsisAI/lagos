@@ -69,7 +69,7 @@ class CustomFooter(Footer):
         return text
 
 
-class SimpleForm(App):
+class Chat(App):
 
     current_index: Reactive[int] = Reactive(-1)
 
@@ -165,4 +165,4 @@ password: {"".join("•" for _ in self.password.value)}
 
 
 if __name__ == "__main__":
-    SimpleForm.run(title="Textual-Inputs Simple Form", log="textual.log")
+    Chat.run(title="Solipsis", log="textual.log")
