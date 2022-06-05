@@ -95,6 +95,7 @@ class Chat(App):
             placeholder="Enter your message",
             title="",
         )
+        self.message_input.on_change_handler_name = "handle_message_input_on_change"
 
         grid = await self.view.dock_grid()
 
@@ -136,6 +137,9 @@ class Chat(App):
     async def action_reset_focus(self) -> None:
         self.current_index = -1
         await self.header.focus()
+
+    async def handle_message_input_on_change(self, message: Message) -> None:
+        self.log(f"Message input change: {message.sender.value}")
 
 
 if __name__ == "__main__":
