@@ -131,7 +131,8 @@ class Chat(App):
     async def action_submit(self) -> None:
         message = self.message_input.value
         self.messages.append(message)
-        await self.message_list.update("\n".join(self.messages))
+        await self.message_list.update("\n".join(self.messages), home=False)
+        self.message_list.page_down()
         self.message_input.value = ""
 
     async def action_reset_focus(self) -> None:
