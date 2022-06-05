@@ -131,19 +131,11 @@ class Chat(App):
         user: {self.message_input.value}
         """
         await self.message_list.update(Text(formatted))
+        self.message_input.value = ""
 
     async def action_reset_focus(self) -> None:
         self.current_index = -1
         await self.header.focus()
-
-    async def handle_username_on_change(self, message: Message) -> None:
-        self.log(f"Username Field Contains: {message.sender.value}")
-
-    async def handle_age_on_change(self, message: Message) -> None:
-        self.log(f"Age Field Contains: {message.sender.value}")
-
-    async def handle_input_on_focus(self, message: Message) -> None:
-        self.current_index = self.tab_index.index(message.sender.name)
 
 
 if __name__ == "__main__":
