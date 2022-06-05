@@ -91,8 +91,9 @@ class Chat(App):
             title="input",
         )
         await self.view.dock(self.header, edge="top")
-        await self.view.dock(self.input_message, edge="top", size=40)
-        await self.view.dock(CustomFooter(), self.message_list, edge="bottom")
+        await self.view.dock(self.message_list, edge="top", size=20)
+        await self.view.dock(self.input_message, edge="bottom")
+        await self.view.dock(CustomFooter(), edge="bottom")
 
     async def action_next_tab_index(self) -> None:
         """Changes the focus to the next form field"""
