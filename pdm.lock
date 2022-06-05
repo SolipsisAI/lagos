@@ -788,6 +788,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "textual-inputs"
+version = "0.2.5"
+requires_python = ">=3.7"
+summary = "textual-inputs is a collection of input widgets for the Textual TUI framework"
+dependencies = [
+    "textual<0.2,>=0.1.14",
+]
+
+[[package]]
 name = "thinc"
 version = "8.0.15"
 requires_python = ">=3.6"
@@ -967,7 +976,7 @@ summary = "Backport of pathlib-compatible object wrapper for zip files"
 
 [metadata]
 lock_version = "3.1"
-content_hash = "sha256:20ccc68f56c805dc5083885c0dc5a50758d4acde1da1b8d128e8fcf87589f2ab"
+content_hash = "sha256:7136b6bacf95df25206e328447804be410f7d5a6b6356095d8213bb13330d2cf"
 
 [metadata.files]
 "absl-py 1.0.0" = [
@@ -1829,6 +1838,10 @@ content_hash = "sha256:20ccc68f56c805dc5083885c0dc5a50758d4acde1da1b8d128e8fcf87
 "textual 0.1.18" = [
     {file = "textual-0.1.18-py3-none-any.whl", hash = "sha256:59110935418c597c1c50876edfd6799ad5b59d51a91ca6744fc45e36eb89638e"},
     {file = "textual-0.1.18.tar.gz", hash = "sha256:b2883f8ed291de58b9aa73de6d24bbaae0174687487458a4eb2a7c188a2acf23"},
+]
+"textual-inputs 0.2.5" = [
+    {file = "textual_inputs-0.2.5-py3-none-any.whl", hash = "sha256:a69b00102dfd4057b2bd84eda3f8bf4dff3bf5798009453a15f780d3e46f4299"},
+    {file = "textual-inputs-0.2.5.tar.gz", hash = "sha256:1a4a33c5817f3ded55596a6b5b0a1479cf9b03a371d2be7eb5d240e8115a92f4"},
 ]
 "thinc 8.0.15" = [
     {file = "thinc-8.0.15-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:0368c0b279492c0ed0b5b1bc79614e8a335ae1ccc3b1617de46f04eb74dc9a43"},
