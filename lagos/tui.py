@@ -3,8 +3,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import rich.box
-from rich.panel import Panel
 from rich.style import Style
 from rich.table import Table
 from rich.text import Text
@@ -96,15 +94,7 @@ class Chat(App):
             title="input",
         )
         self.message_list = ScrollView(gutter=1)
-
-        # self.output = Static(
-        #     renderable=Panel(
-        #         "", title="Report", border_style="blue", box=rich.box.SQUARE
-        #     )
-        # )
-        # await self.view.dock(self.output, edge="top")
-        await self.view.dock(self.message_list, edge="left", size=40)
-        await self.view.dock(self.input_message, edge="right")
+        await self.view.dock(self.message_list, self.input_message, edge="top")
 
     async def action_next_tab_index(self) -> None:
         """Changes the focus to the next form field"""
