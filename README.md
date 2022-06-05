@@ -65,7 +65,7 @@ After starting up the websocket and client(s), you can then chat with the bot fr
 
 ```shell
 # Install the wscat websocket client
-npm install -i wscat
+npm install -g wscat
 
 # Connect to the websocket
 wscat -c 'ws://localhost:8001/'
