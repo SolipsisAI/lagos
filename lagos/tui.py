@@ -159,11 +159,14 @@ class Chat(App):
         text = self.message_input.value
         event = Event(username="bitjockey", text=text)
 
+        # Send message to bot
         self.bot.receive(event)
-        await self.message_list.update(MessageList(messages=self.bot.history))
-
-        self.message_list.page_down()
         self.message_input.value = ""
+        await self.message_list.update(MessageList(messages=self.bot.history))
+        self.message_list.page_down()
+
+        # await self.message_list.update(MessageList(messages=self.bot.history))
+        # self.message_list.page_down()
 
     async def action_reset_focus(self) -> None:
         self.current_index = -1
