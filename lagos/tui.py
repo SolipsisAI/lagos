@@ -74,6 +74,7 @@ class Chat(App):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         self.tab_index = ["message_input"]
+        self.messages = []
 
     async def on_load(self) -> None:
         await self.bind("q", "quit", "Quit")
@@ -127,10 +128,9 @@ class Chat(App):
             await getattr(self, self.tab_index[self.current_index]).focus()
 
     async def action_submit(self) -> None:
-        formatted = f"""
-        user: {self.message_input.value}
-        """
-        await self.message_list.update(Text(formatted))
+        message = self.message_input.value
+        self.messages.append(message)
+        await self.message_list.update("\n".join(self.messages))
         self.message_input.value = ""
 
     async def action_reset_focus(self) -> None:
