@@ -508,6 +508,11 @@ dependencies = [
 ]
 
 [[package]]
+name = "pyfiglet"
+version = "0.8.post1"
+summary = "Pure-python FIGlet implementation"
+
+[[package]]
 name = "pygments"
 version = "2.12.0"
 requires_python = ">=3.6"
@@ -962,7 +967,7 @@ summary = "Backport of pathlib-compatible object wrapper for zip files"
 
 [metadata]
 lock_version = "3.1"
-content_hash = "sha256:c53208005f3f4b42a085e862c54020148a75971087a32a87b22159735ba9e60b"
+content_hash = "sha256:20ccc68f56c805dc5083885c0dc5a50758d4acde1da1b8d128e8fcf87589f2ab"
 
 [metadata.files]
 "absl-py 1.0.0" = [
@@ -1576,6 +1581,10 @@ content_hash = "sha256:c53208005f3f4b42a085e862c54020148a75971087a32a87b22159735
     {file = "pydantic-1.8.2-cp39-cp39-win_amd64.whl", hash = "sha256:4be75bebf676a5f0f87937c6ddb061fa39cbea067240d98e298508c1bda6f3f3"},
     {file = "pydantic-1.8.2-py3-none-any.whl", hash = "sha256:fec866a0b59f372b7e776f2d7308511784dace622e0992a0b59ea3ccee0ae833"},
     {file = "pydantic-1.8.2.tar.gz", hash = "sha256:26464e57ccaafe72b7ad156fdaa4e9b9ef051f69e175dbbb463283000c05ab7b"},
+]
+"pyfiglet 0.8.post1" = [
+    {file = "pyfiglet-0.8.post1-py2.py3-none-any.whl", hash = "sha256:d555bcea17fbeaf70eaefa48bb119352487e629c9b56f30f383e2c62dd67a01c"},
+    {file = "pyfiglet-0.8.post1.tar.gz", hash = "sha256:c6c2321755d09267b438ec7b936825a4910fec696292139e664ca8670e103639"},
 ]
 "pygments 2.12.0" = [
     {file = "Pygments-2.12.0-py3-none-any.whl", hash = "sha256:dc9c10fb40944260f6ed4c688ece0cd2048414940f1cea51b8b226318411c519"},
