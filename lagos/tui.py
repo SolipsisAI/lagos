@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 from datetime import datetime
-
 from typing import TYPE_CHECKING, Dict, List
 
 from rich.style import Style
@@ -78,18 +77,20 @@ class MessageList(Widget):
         self.tall = True
         self.messages = messages
 
-    def timestamp(self):
-        return datetime.now().strftime("%H:%M:%S")
-
     def render(self) -> Table:
         header_table = Table.grid(padding=(0, 1), expand=True)
-        header_table.add_column("timestamp", justify="left", ratio=0, width=7)
-        header_table.add_column("username", justify="right", ratio=0, width=15)
+        header_table.add_column(
+            "timestamp", justify="left", ratio=0, width=7, style="magenta"
+        )
+        header_table.add_column(
+            "username", justify="right", ratio=0, width=15, style="green"
+        )
         header_table.add_column("text", justify="left", ratio=1)
         for message in self.messages:
+            timestamp = message["timestamp"].strftime("%H:%M:%S")
             username = message["username"]
             text = message["text"]
-            header_table.add_row(self.timestamp(), f"{username} | ", text)
+            header_table.add_row(timestamp, f"{username} [blue]|[/blue] ", text)
         return header_table
 
 
@@ -155,7 +156,11 @@ class Chat(App):
 
     async def action_submit(self) -> None:
         text = self.message_input.value
-        message = {"username": "yourusername", "text": text}
+        message = {
+            "timestamp": datetime.now(),
+            "username": "yourusername",
+            "text": text,
+        }
         self.messages.append(message)
         await self.message_list.update(MessageList(messages=self.messages))
         self.message_list.page_down()
