@@ -29,7 +29,9 @@ class Bot:
         """Receive an input message"""
         self.history.append(event)
 
-    def respond(self):
+        return self.last_event
+
+    async def respond(self):
         """Response to the last message"""
         self.load_pipeline()
 
