@@ -73,7 +73,7 @@ class Chat(App):
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-        self.tab_index = ["input_message"]
+        self.tab_index = ["message_input"]
 
     async def on_load(self) -> None:
         await self.bind("q", "quit", "Quit")
@@ -89,18 +89,18 @@ class Chat(App):
         await self.view.dock(CustomFooter(), edge="bottom")
 
         self.message_list = ScrollView(gutter=1)
-        self.input_message = TextInput(
-            name="input_message",
+        self.message_input = TextInput(
+            name="message_input",
             placeholder="Enter your message",
-            title="input",
+            title="",
         )
 
         grid = await self.view.dock_grid(edge="left", name="left")
+
         grid.add_column(fraction=1, name="left", min_size=20)
         grid.add_column(size=30, name="center")
         grid.add_column(fraction=1, name="right")
 
-        grid.add_row(fraction=1, name="top", min_size=2)
         grid.add_row(fraction=2, name="middle")
         grid.add_row(fraction=1, name="bottom", max_size=20)
 
@@ -111,7 +111,7 @@ class Chat(App):
 
         grid.place(
             message_list=self.message_list,
-            message_input=self.input_message,
+            message_input=self.message_input,
         )
 
     async def action_next_tab_index(self) -> None:
@@ -128,7 +128,7 @@ class Chat(App):
 
     async def action_submit(self) -> None:
         formatted = f"""
-        user: {self.input_message.value}
+        user: {self.message_input.value}
         """
         await self.message_list.update(Text(formatted))
 
