@@ -11,9 +11,9 @@ from rich.text import Text
 from textual import events
 from textual.app import App
 from textual.reactive import Reactive
-from textual.widgets import Footer, Header, Static
+from textual.widgets import Footer, Header, ScrollView
 
-from textual_inputs import IntegerInput, TextInput
+from textual_inputs import TextInput
 
 if TYPE_CHECKING:
     from textual.message import Message
@@ -95,13 +95,15 @@ class Chat(App):
             placeholder="Enter your message",
             title="input",
         )
+        self.message_list = ScrollView(gutter=1)
 
-        self.output = Static(
-            renderable=Panel(
-                "", title="Report", border_style="blue", box=rich.box.SQUARE
-            )
-        )
-        await self.view.dock(self.output, edge="left", size=40)
+        # self.output = Static(
+        #     renderable=Panel(
+        #         "", title="Report", border_style="blue", box=rich.box.SQUARE
+        #     )
+        # )
+        # await self.view.dock(self.output, edge="top")
+        await self.view.dock(self.message_list, edge="left", size=40)
         await self.view.dock(self.input_message, edge="right")
 
     async def action_next_tab_index(self) -> None:
@@ -120,9 +122,7 @@ class Chat(App):
         formatted = f"""
         user: {self.input_message.value}
         """
-        await self.output.update(
-            Panel(formatted, title="Report", border_style="blue", box=rich.box.SQUARE)
-        )
+        await self.message_list.update(Text(formatted))
 
     async def action_reset_focus(self) -> None:
         self.current_index = -1
