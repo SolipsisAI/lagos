@@ -78,16 +78,18 @@ class MessageList(Widget):
         self.tall = True
         self.messages = messages
 
+    def timestamp(self):
+        return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
     def render(self) -> Table:
         header_table = Table.grid(padding=(0, 1), expand=True)
-        header_table.add_column("timestamp", justify="left", ratio=0, width=15)
-        header_table.add_column("username", justify="right", ratio=0, width=20)
-        header_table.add_column("title", justify="left", ratio=1)
+        header_table.add_column("timestamp", justify="left", ratio=0, width=20)
+        header_table.add_column("username", justify="right", ratio=0, width=15)
+        header_table.add_column("text", justify="left", ratio=1)
         for message in self.messages:
-            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
             username = message["username"]
             text = message["text"]
-            header_table.add_row(timestamp, f"{username} | ", text)
+            header_table.add_row(self.timestamp(), f"{username} | ", text)
         return header_table
 
 
