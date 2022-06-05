@@ -14,11 +14,26 @@ class Event:
 class Bot:
     def __init__(self, model: str = "microsoft/DialoGPT-medium"):
         self.model = model
-        self.pipeline = load_pipeline("conversational", model=self.model)
         self.history = []
+        self.pipeline = None
 
-    def respond(self, event: Event):
+    @property
+    def last_event(self):
+        return self.history[-1] if self.history else None
+
+    def load_pipeline(self):
+        if self.pipeline is None:
+            self.pipeline = load_pipeline("conversational", model=self.model)
+
+    def receive(self, event: Event):
+        """Receive an input message"""
         self.history.append(event)
+
+    def respond(self):
+        """Response to the last message"""
+        self.load_pipeline()
+
+        event = self.last_event
 
         conversation_id = event.conversation_id
         conversation_id, conversation = self.pipeline.predict(
@@ -30,4 +45,4 @@ class Bot:
         )
         self.history.append(response_event)
 
-        return self.history[-1]
+        return self.last_event

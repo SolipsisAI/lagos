@@ -158,8 +158,8 @@ class Chat(App):
     async def action_submit(self) -> None:
         text = self.message_input.value
         event = Event(username="bitjockey", text=text)
-        self.bot.respond(event)
 
+        self.bot.receive(event)
         await self.message_list.update(MessageList(messages=self.bot.history))
 
         self.message_list.page_down()
