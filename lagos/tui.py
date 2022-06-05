@@ -172,7 +172,3 @@ class Chat(App):
 
     async def handle_message_input_on_change(self, message: Message) -> None:
         self.log(f"Message input change: {message.sender.value}")
-
-
-if __name__ == "__main__":
-    Chat.run(title="Solipsis", log="textual.log")

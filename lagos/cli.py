@@ -27,3 +27,11 @@ def serve(host, port):
     from lagos.server import app
 
     asyncio.run(app(host, port))
+
+
+@cli.command()
+def app():
+    """Launch text-based UI"""
+    from lagos.tui import Chat
+
+    Chat.run(title="Solipsis", log="textual.log")
