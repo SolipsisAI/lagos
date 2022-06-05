@@ -79,11 +79,11 @@ class MessageList(Widget):
         self.messages = messages
 
     def timestamp(self):
-        return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        return datetime.now().strftime("%H:%M:%S")
 
     def render(self) -> Table:
         header_table = Table.grid(padding=(0, 1), expand=True)
-        header_table.add_column("timestamp", justify="left", ratio=0, width=20)
+        header_table.add_column("timestamp", justify="left", ratio=0, width=7)
         header_table.add_column("username", justify="right", ratio=0, width=15)
         header_table.add_column("text", justify="left", ratio=1)
         for message in self.messages:
