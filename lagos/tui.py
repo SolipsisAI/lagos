@@ -33,7 +33,7 @@ class CustomHeader(Header):
         header_table.add_column("title", justify="center", ratio=1)
         header_table.add_column("clock", justify="right", width=8)
         header_table.add_row(
-            "🔤", self.full_title, self.get_clock() if self.clock else ""
+            "", self.full_title, self.get_clock() if self.clock else ""
         )
         return header_table
 
@@ -75,7 +75,7 @@ class Chat(App):
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-        self.tab_index = ["username", "password", "age", "code"]
+        self.tab_index = ["input_message"]
 
     async def on_load(self) -> None:
         await self.bind("q", "quit", "Quit")
@@ -90,31 +90,10 @@ class Chat(App):
         await self.view.dock(self.header, edge="top")
         await self.view.dock(CustomFooter(), edge="bottom")
 
-        self.username = TextInput(
-            name="username",
-            placeholder="enter your username...",
-            title="Username",
-        )
-        self.username.on_change_handler_name = "handle_username_on_change"
-
-        self.password = TextInput(
-            name="password",
-            title="Password",
-            password=True,
-        )
-
-        self.age = IntegerInput(
-            name="age",
-            placeholder="enter your age...",
-            title="Age",
-        )
-        self.age.on_change_handler_name = "handle_age_on_change"
-
-        self.code = TextInput(
-            name="code",
-            placeholder="enter some python code...",
-            title="Code",
-            syntax="python",
+        self.input_message = TextInput(
+            name="input_message",
+            placeholder="Enter your message",
+            title="input",
         )
 
         self.output = Static(
@@ -123,9 +102,7 @@ class Chat(App):
             )
         )
         await self.view.dock(self.output, edge="left", size=40)
-        await self.view.dock(
-            self.username, self.password, self.age, self.code, edge="top"
-        )
+        await self.view.dock(self.input_message, edge="right")
 
     async def action_next_tab_index(self) -> None:
         """Changes the focus to the next form field"""
@@ -141,10 +118,7 @@ class Chat(App):
 
     async def action_submit(self) -> None:
         formatted = f"""
-username: {self.username.value}
-password: {"".join("•" for _ in self.password.value)}
-     age: {self.age.value}
-    code: {self.code.value}
+        user: {self.input_message.value}
         """
         await self.output.update(
             Panel(formatted, title="Report", border_style="blue", box=rich.box.SQUARE)
