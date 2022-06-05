@@ -81,7 +81,9 @@ class MessageList(Widget):
         header_table.add_column("username", justify="right", ratio=0, width=20)
         header_table.add_column("title", justify="left", ratio=1)
         for message in self.messages:
-            header_table.add_row(message["username"], message["text"])
+            username = message["username"]
+            text = message["text"]
+            header_table.add_row(f"{username} | ", text)
         return header_table
 
 
