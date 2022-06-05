@@ -97,15 +97,17 @@ class Chat(App):
 
         grid = await self.view.dock_grid()
 
-        grid.add_column(fraction=1, name="col")
+        grid.add_column(name="col")
 
-        grid.add_row(fraction=2, name="top")
-        grid.add_row(fraction=1, name="bottom", max_size=20)
+        grid.add_row(name="top", fraction=5)
+        grid.add_row(name="bottom", fraction=1, size=3)
 
         grid.add_areas(
             message_list="col-start|col-end,top",
             message_input="col-start|col-end,bottom",
         )
+
+        grid.set_align("stretch", "stretch")
 
         grid.place(
             message_list=self.message_list,
