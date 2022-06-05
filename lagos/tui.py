@@ -83,18 +83,16 @@ class Chat(App):
         await self.bind("shift+tab", "previous_tab_index", show=False)
 
     async def on_mount(self) -> None:
-
         self.header = CustomHeader()
-        await self.view.dock(self.header, edge="top")
-        await self.view.dock(CustomFooter(), edge="bottom")
-
+        self.message_list = ScrollView(gutter=1)
         self.input_message = TextInput(
             name="input_message",
             placeholder="Enter your message",
             title="input",
         )
-        self.message_list = ScrollView(gutter=1)
-        await self.view.dock(self.message_list, self.input_message, edge="top")
+        await self.view.dock(self.header, edge="top")
+        await self.view.dock(self.input_message, edge="top", size=40)
+        await self.view.dock(CustomFooter(), self.message_list, edge="bottom")
 
     async def action_next_tab_index(self) -> None:
         """Changes the focus to the next form field"""
