@@ -18,6 +18,8 @@ class Bot:
         self.history = []
 
     def respond(self, event: Event):
+        self.history.append(event)
+
         conversation_id = event.conversation_id
         conversation_id, conversation = self.pipeline.predict(
             conversation_id=conversation_id, text=event.text
