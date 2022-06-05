@@ -1,7 +1,7 @@
 # app.py
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Dict, List
 
 from rich.style import Style
 from rich.table import Table
@@ -9,6 +9,7 @@ from rich.text import Text
 from textual import events
 from textual.app import App
 from textual.reactive import Reactive
+from textual.widget import Widget
 from textual.widgets import Footer, Header, ScrollView
 
 from textual_inputs import TextInput
@@ -67,6 +68,23 @@ class CustomFooter(Footer):
         return text
 
 
+class MessageList(Widget):
+    """Override the default Header for Styling"""
+
+    def __init__(self, messages: List[Dict]) -> None:
+        super().__init__()
+        self.tall = True
+        self.messages = messages
+
+    def render(self) -> Table:
+        header_table = Table.grid(padding=(0, 1), expand=True)
+        header_table.add_column("username", justify="right", ratio=0, width=20)
+        header_table.add_column("title", justify="left", ratio=1)
+        for message in self.messages:
+            header_table.add_row(message["username"], message["text"])
+        return header_table
+
+
 class Chat(App):
 
     current_index: Reactive[int] = Reactive(-1)
@@ -84,7 +102,6 @@ class Chat(App):
         await self.bind("shift+tab", "previous_tab_index", show=False)
 
     async def on_mount(self) -> None:
-
         self.header = CustomHeader()
         await self.view.dock(self.header, edge="top")
         await self.view.dock(CustomFooter(), edge="bottom")
@@ -129,9 +146,10 @@ class Chat(App):
             await getattr(self, self.tab_index[self.current_index]).focus()
 
     async def action_submit(self) -> None:
-        message = self.message_input.value
+        text = self.message_input.value
+        message = {"username": "yourusername", "text": text}
         self.messages.append(message)
-        await self.message_list.update("\n".join(self.messages), home=False)
+        await self.message_list.update(MessageList(messages=self.messages))
         self.message_list.page_down()
         self.message_input.value = ""
 
