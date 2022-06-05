@@ -95,18 +95,16 @@ class Chat(App):
             title="",
         )
 
-        grid = await self.view.dock_grid(edge="left", name="left")
+        grid = await self.view.dock_grid()
 
-        grid.add_column(fraction=1, name="left", min_size=20)
-        grid.add_column(size=30, name="center")
-        grid.add_column(fraction=1, name="right")
+        grid.add_column(fraction=1, name="col")
 
-        grid.add_row(fraction=2, name="middle")
+        grid.add_row(fraction=2, name="top")
         grid.add_row(fraction=1, name="bottom", max_size=20)
 
         grid.add_areas(
-            message_list="left-start|right-end,middle",
-            message_input="left-start|right-end,bottom",
+            message_list="col-start|col-end,top",
+            message_input="col-start|col-end,bottom",
         )
 
         grid.place(
