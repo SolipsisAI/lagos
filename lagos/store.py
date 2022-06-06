@@ -13,6 +13,14 @@ class User:
         self.name = row[1]
         self.is_bot = bool(row[2])
 
+    def __repr__(self) -> str:
+        return f"""
+        (User)
+        id: {self.id}
+        name: {self.name}
+        is_bot: {self.is_bot}
+        """
+
 
 def load(name: str = DB_NAME) -> sqlite3.Connection:
     db_exists = Path(name).exists()
