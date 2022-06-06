@@ -87,7 +87,31 @@ def insert_user(
 def get_messages(con: sqlite3.Connection):
     cur = con.cursor()
 
-    cur.execute("SELECT * FROM messages")
+    cur.execute(
+        """
+        SELECT
+            m.*,
+            u.name as username
+        FROM messages m
+        INNER JOIN users u
+            ON m.author_id = u.id
+        """
+    )
     results = cur.fetchall()
 
     return results
+
+
+def last_message(con: sqlite3.Connection):
+    cur = con.cursor()
+
+    cur.execute(
+        """
+        SELECT *
+        FROM messages
+        ORDER BY timestamp DESC
+        """
+    )
+    result = cur.fetchone()
+
+    return result
