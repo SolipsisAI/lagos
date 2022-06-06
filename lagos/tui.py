@@ -98,7 +98,7 @@ class MessageList(Widget):
         if not self.messages:
             return
         
-        message = self.messages[-1]
+        message = self.messages.pop(0)
         timestamp = message["timestamp"].strftime("%H:%M:%S")
         username = message["username"]
         text = message["text"]
@@ -108,7 +108,6 @@ class MessageList(Widget):
     def render(self) -> Table:
         #self.scroll_view.update(self.table)
         #return self.scroll_view
-        self.table.add_row("a", "b", "c")
         return self.table
 
 
