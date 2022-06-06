@@ -18,7 +18,7 @@ class Bot:
         if self.pipeline is None:
             self.pipeline = load_pipeline("conversational", model=self.model)
 
-    def receive(self, message: MessageRecord):
+    async def receive(self, message: MessageRecord):
         """Receive an input message"""
         store.insert_message(self.con, message)
 
