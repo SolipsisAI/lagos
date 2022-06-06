@@ -4,6 +4,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Dict, List
 
+from rich.panel import Panel
 from rich.style import Style
 from rich.table import Table
 from rich.text import Text
@@ -92,7 +93,6 @@ class MessageList(Widget):
             "username", justify="right", ratio=0, width=15, style="green"
         )
         self.table.add_column("text", justify="left", ratio=1)
-        self.scroll_view = ScrollView(gutter=1)
         self.update_messages() 
         self.set_interval(0.1, self.update_messages)
 
@@ -108,8 +108,6 @@ class MessageList(Widget):
         self.refresh()
 
     def render(self) -> Table:
-        #self.scroll_view.update(self.table)
-        #return self.scroll_view
         return self.table
 
 
@@ -134,7 +132,6 @@ class Chat(App):
         await self.view.dock(CustomFooter(), edge="bottom")
 
         self.message_list = MessageList()
-        self.message_view = ScrollView(gutter=1)
 
         self.message_input = TextInput(
             name="message_input",
@@ -152,14 +149,14 @@ class Chat(App):
         grid.add_row(name="bottom", fraction=1, size=3)
 
         grid.add_areas(
-            message_view="col-start|col-end,top",
+            message_list="col-start|col-end,top",
             message_input="col-start|col-end,bottom",
         )
 
         grid.set_align("stretch", "stretch")
         
         grid.place(
-            message_view=self.message_view,
+            message_list=self.message_list,
             message_input=self.message_input,
         )
 
@@ -183,7 +180,6 @@ class Chat(App):
             "text": text,
         }
         self.message_list.messages.append(message)
-        self.message_view.page_down()
         self.message_input.value = ""
 
     async def action_reset_focus(self) -> None:
