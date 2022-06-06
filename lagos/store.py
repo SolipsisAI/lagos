@@ -1,53 +1,13 @@
 import sqlite3
 
-from typing import Union, Dict
 from pathlib import Path
 from datetime import datetime
+
+from lagos.records import UserRecord, MessageRecord
 
 
 DB_NAME = "lagos.db"
 
-
-class UserRecord:
-    def __init__(self, row: Union[sqlite3.Row, Dict]) -> None:
-        if isinstance(row, dict):
-            row = list(row.values())
-
-        self.id = row[0]
-        self.name = row[1]
-        self.is_bot = bool(row[2])
-
-    def __repr__(self) -> str:
-        return f"""
-        (User)
-        id: {self.id}
-        name: {self.name}
-        is_bot: {self.is_bot}
-        """
-
-
-class MessageRecord:
-    def __init__(self, row: Union[sqlite3.Row, Dict]) -> None:
-        if isinstance(row, dict):
-            row = list(row.values())
-
-        self.id = row[0]
-        self.author_id = row[1]
-        self.recipient_id = row[2]
-        self.text = row[3]
-        self.timestamp = row[4]
-        self.username = row[5]
-
-    def __repr__(self) -> str:
-        return f"""
-        (Message)
-        id: {self.id}
-        username: {self.username}
-        author_id: {self.author_id}
-        recipient_id: {self.recipient_id}
-        text: {self.text}
-        timestamp: {self.timestamp}
-        """
 
 
 def load(name: str = DB_NAME) -> sqlite3.Connection:
@@ -80,7 +40,7 @@ def create(con: sqlite3.Connection) -> sqlite3.Connection:
         CREATE TABLE messages (
             id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
             author_id INTEGER NOT NULL,
-            recipient_id INTEGER NOT NULL,
+            conversation_id INTEGER NOT NULL,
             text TEXT,
             timestamp DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
         );
@@ -90,11 +50,21 @@ def create(con: sqlite3.Connection) -> sqlite3.Connection:
     # Save (commit) the changes
     con.commit()
 
+    # Setup
+    setup_users(con)
+
     return con
 
 
+def setup_users(con: sqlite3.Connection):
+    # Bot
+    insert_user(con, name="Erica", is_bot=True)
+    # User
+    insert_user(con, name="bitjockey", is_bot=False)
+
+
 def insert_message(
-    con: sqlite3.Connection, author_id: int, recipient_id: int, text: str
+    con: sqlite3.Connection, message: MessageRecord
 ) -> sqlite3.Connection:
     cur = con.cursor()
 
@@ -102,7 +72,7 @@ def insert_message(
         """
         INSERT INTO messages VALUES(?, ?, ?, ?, ?)
         """,
-        (None, author_id, recipient_id, text, datetime.now().isoformat()),
+        (None, message.author_id, message.conversation_id, message.text, message.timestamp),
     )
 
     con.commit()
@@ -111,20 +81,30 @@ def insert_message(
 
 
 def insert_user(
-    con: sqlite3.Connection, name: str, is_bot: bool = False
-) -> sqlite3.Connection:
+    con: sqlite3.Connection, user: UserRecord
+) -> UserRecord:
     cur = con.cursor()
 
     cur.execute(
         """
         INSERT INTO users VALUES(?, ?, ?)
         """,
-        (None, name, is_bot),
+        (None, user.name, user.is_bot),
     )
 
     con.commit()
 
     return con
+
+
+def last_user(con: sqlite3.Connection):
+    cur = con.cursor()
+
+    cur.execute("SELECT * FROM users ORDER BY DESC")
+
+    result = cur.fetchone()
+    return UserRecord(result)
+
 
 
 def get_messages(con: sqlite3.Connection):
@@ -133,11 +113,9 @@ def get_messages(con: sqlite3.Connection):
     cur.execute(
         """
         SELECT
-            m.*,
-            u.name as username
-        FROM messages m
-        INNER JOIN users u
-            ON m.author_id = u.id
+            *
+        FROM messages
+        ORDER BY messages.timestamp ASC
         """
     )
     results = cur.fetchall()
@@ -151,11 +129,8 @@ def last_message(con: sqlite3.Connection):
     cur.execute(
         """
         SELECT
-            m.*,
-            u.name as username
-        FROM messages m
-        INNER JOIN users u
-            ON m.author_id = u.id
+            *
+        FROM messages
         ORDER BY timestamp DESC
         """
     )

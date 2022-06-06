@@ -1,5 +1,7 @@
 from lagos.pipelines import load_pipeline
 
+from lagos import store
+from lagos.records import UserRecord, MessageRecord
 from lagos.utils import timestamp
 
 
@@ -14,25 +16,20 @@ class BotEvent:
 class Bot:
     def __init__(self, model: str = "microsoft/DialoGPT-medium"):
         self.model = model
-        self.history = []
-        self.responses = []
+        self.con = store.load()
         self.pipeline = None
 
     @property
     def last_event(self):
-        return self.history[-1] if self.history else None
-
-    @property
-    def last_response(self):
-        return self.responses[-1] if self.responses else None
+        return store.last_message(self.con)
 
     def load_pipeline(self):
         if self.pipeline is None:
             self.pipeline = load_pipeline("conversational", model=self.model)
 
-    def receive(self, event: BotEvent):
+    def receive(self, message: MessageRecord):
         """Receive an input message"""
-        self.history.append(event)
+        store.insert_message(self.con, message)
 
         return self.last_event
 
