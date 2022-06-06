@@ -36,11 +36,13 @@ class MessageRecord:
         self.recipient_id = row[2]
         self.text = row[3]
         self.timestamp = row[4]
+        self.username = row[5]
 
     def __repr__(self) -> str:
         return f"""
         (Message)
         id: {self.id}
+        username: {self.username}
         author_id: {self.author_id}
         recipient_id: {self.recipient_id}
         text: {self.text}
