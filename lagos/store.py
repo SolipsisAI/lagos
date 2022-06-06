@@ -1,6 +1,8 @@
 import sqlite3
 
 from pathlib import Path
+from datetime import datetime
+
 
 DB_NAME = "lagos.db"
 
@@ -43,6 +45,40 @@ def create(con: sqlite3.Connection) -> sqlite3.Connection:
     )
 
     # Save (commit) the changes
+    con.commit()
+
+    return con
+
+
+def insert_message(
+    con: sqlite3.Connection, author_id: int, recipient_id: int, text: str
+) -> sqlite3.Connection:
+    cur = con.cursor()
+
+    cur.execute(
+        """
+        INSERT INTO messages VALUES(?, ?, ?, ?, ?)
+        """,
+        (None, author_id, recipient_id, text, datetime.now().isoformat()),
+    )
+
+    con.commit()
+
+    return con
+
+
+def insert_user(
+    con: sqlite3.Connection, name: str, is_bot: bool = False
+) -> sqlite3.Connection:
+    cur = con.cursor()
+
+    cur.execute(
+        """
+        INSERT INTO users VALUES(?, ?, ?)
+        """,
+        (None, name, is_bot),
+    )
+
     con.commit()
 
     return con
