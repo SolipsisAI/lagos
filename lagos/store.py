@@ -82,7 +82,7 @@ def insert_message(
 
     con.commit()
 
-    return con
+    return last_message(con)
 
 
 def insert_user(con: sqlite3.Connection, user: UserRecord) -> UserRecord:
@@ -97,7 +97,7 @@ def insert_user(con: sqlite3.Connection, user: UserRecord) -> UserRecord:
 
     con.commit()
 
-    return con
+    return last_user(con)
 
 
 def last_user(con: sqlite3.Connection):
