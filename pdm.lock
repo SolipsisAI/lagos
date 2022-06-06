@@ -421,6 +421,11 @@ dependencies = [
 ]
 
 [[package]]
+name = "persist-queue"
+version = "0.8.0"
+summary = "A thread-safe disk based persistent queue in Python."
+
+[[package]]
 name = "pexpect"
 version = "4.8.0"
 summary = "Pexpect allows easy control of interactive console applications."
@@ -976,7 +981,7 @@ summary = "Backport of pathlib-compatible object wrapper for zip files"
 
 [metadata]
 lock_version = "3.1"
-content_hash = "sha256:7136b6bacf95df25206e328447804be410f7d5a6b6356095d8213bb13330d2cf"
+content_hash = "sha256:8075b7c1526b737e28c836ccc5d0303b63114ba5c75552753e2da058c1d8657e"
 
 [metadata.files]
 "absl-py 1.0.0" = [
@@ -1477,6 +1482,10 @@ content_hash = "sha256:7136b6bacf95df25206e328447804be410f7d5a6b6356095d8213bb13
 "pathy 0.6.1" = [
     {file = "pathy-0.6.1-py3-none-any.whl", hash = "sha256:25fd04cec6393661113086730ce69c789d121bea83ab1aa18452e8fd42faf29a"},
     {file = "pathy-0.6.1.tar.gz", hash = "sha256:838624441f799a06b446a657e4ecc9ebc3fdd05234397e044a7c87e8f6e76b1c"},
+]
+"persist-queue 0.8.0" = [
+    {file = "persist_queue-0.8.0-py2.py3-none-any.whl", hash = "sha256:d0ce1798b457fc233973efe7c262eb5e80642bebe0c05abbe5611ee223511d5f"},
+    {file = "persist-queue-0.8.0.tar.gz", hash = "sha256:bdaa4dcfc4b20a9ce1f5cb6da3116b6cb8fe37527d991fd242856ef2cccd218e"},
 ]
 "pexpect 4.8.0" = [
     {file = "pexpect-4.8.0-py2.py3-none-any.whl", hash = "sha256:0b48a55dcb3c05f3329815901ea4fc1537514d6ba867a152b581d69ae3710937"},
