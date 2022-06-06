@@ -103,9 +103,11 @@ class MessageList(Widget):
             return
 
         message = self.messages.pop(0)
+
         timestamp = message.timestamp
         username = message.username
         text = message.text
+
         self.table.add_row(timestamp, f"{username} [blue]|[/blue] ", text)
         self.refresh()
 
@@ -185,6 +187,9 @@ class Chat(App):
 
         self.message_list.messages.append(bot_event)
         self.message_input.value = ""
+
+        await self.bot.respond()
+        self.message_list.messages.append(self.bot.last_response)
 
     async def action_reset_focus(self) -> None:
         self.current_index = -1

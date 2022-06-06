@@ -15,11 +15,16 @@ class Bot:
     def __init__(self, model: str = "microsoft/DialoGPT-medium"):
         self.model = model
         self.history = []
+        self.responses = []
         self.pipeline = None
 
     @property
     def last_event(self):
         return self.history[-1] if self.history else None
+
+    @property
+    def last_response(self):
+        return self.responses[-1] if self.responses else None
 
     def load_pipeline(self):
         if self.pipeline is None:
@@ -46,5 +51,6 @@ class Bot:
             username="bot", text=text, conversation_id=conversation_id
         )
         self.history.append(response_event)
+        self.responses.append(response_event)
 
         return self.last_event
