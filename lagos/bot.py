@@ -3,7 +3,7 @@ from lagos.pipelines import load_pipeline
 from lagos.utils import timestamp
 
 
-class Event:
+class BotEvent:
     def __init__(self, username: str, text: str, conversation_id=None):
         self.timestamp = timestamp()
         self.username = username
@@ -25,7 +25,7 @@ class Bot:
         if self.pipeline is None:
             self.pipeline = load_pipeline("conversational", model=self.model)
 
-    def receive(self, event: Event):
+    def receive(self, event: BotEvent):
         """Receive an input message"""
         self.history.append(event)
 
@@ -42,7 +42,7 @@ class Bot:
             conversation_id=conversation_id, text=event.text
         )
         text = conversation.generated_responses[-1]
-        response_event = Event(
+        response_event = BotEvent(
             username="bot", text=text, conversation_id=conversation_id
         )
         self.history.append(response_event)

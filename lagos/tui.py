@@ -16,6 +16,8 @@ from textual.widgets import Footer, Header, ScrollView
 
 from textual_inputs import TextInput
 
+from lagos.bot import Bot, BotEvent
+
 if TYPE_CHECKING:
     from textual.message import Message
 
@@ -93,17 +95,17 @@ class MessageList(Widget):
             "username", justify="right", ratio=0, width=15, style="green"
         )
         self.table.add_column("text", justify="left", ratio=1)
-        self.update_messages() 
+        self.update_messages()
         self.set_interval(0.1, self.update_messages)
 
     def update_messages(self):
         if not self.messages:
             return
-        
+
         message = self.messages.pop(0)
-        timestamp = message["timestamp"].strftime("%H:%M:%S")
-        username = message["username"]
-        text = message["text"]
+        timestamp = message.timestamp
+        username = message.username
+        text = message.text
         self.table.add_row(timestamp, f"{username} [blue]|[/blue] ", text)
         self.refresh()
 
@@ -117,6 +119,7 @@ class Chat(App):
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
+        self.bot = None
         self.tab_index = ["message_input"]
 
     async def on_load(self) -> None:
@@ -154,11 +157,13 @@ class Chat(App):
         )
 
         grid.set_align("stretch", "stretch")
-        
+
         grid.place(
             message_list=self.message_list,
             message_input=self.message_input,
         )
+
+        self.bot = Bot()
 
     async def action_next_tab_index(self) -> None:
         """Changes the focus to the next form field"""
@@ -174,12 +179,11 @@ class Chat(App):
 
     async def action_submit(self) -> None:
         text = self.message_input.value
-        message = {
-            "timestamp": datetime.now(),
-            "username": "yourusername",
-            "text": text,
-        }
-        self.message_list.messages.append(message)
+
+        bot_event = BotEvent(username="bitjockey", text=text)
+        self.bot.receive(bot_event)
+
+        self.message_list.messages.append(bot_event)
         self.message_input.value = ""
 
     async def action_reset_focus(self) -> None:
