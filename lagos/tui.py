@@ -15,8 +15,6 @@ from textual.widgets import Footer, Header, ScrollView
 
 from textual_inputs import TextInput
 
-from lagos.bot import Bot, Event
-
 if TYPE_CHECKING:
     from textual.message import Message
 
@@ -74,7 +72,7 @@ class CustomFooter(Footer):
 class MessageList(Widget):
     """Override the default Header for Styling"""
 
-    def __init__(self, messages: List[Event]) -> None:
+    def __init__(self, messages: List[Dict]) -> None:
         super().__init__()
         self.tall = True
         self.messages = messages
@@ -89,9 +87,10 @@ class MessageList(Widget):
         )
         header_table.add_column("text", justify="left", ratio=1)
         for message in self.messages:
-            header_table.add_row(
-                message.timestamp, f"{message.username} [blue]|[/blue] ", message.text
-            )
+            timestamp = message["timestamp"].strftime("%H:%M:%S")
+            username = message["username"]
+            text = message["text"]
+            header_table.add_row(timestamp, f"{username} [blue]|[/blue] ", text)
         return header_table
 
 
@@ -101,8 +100,8 @@ class Chat(App):
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-        self.bot = Bot()
         self.tab_index = ["message_input"]
+        self.messages = []
 
     async def on_load(self) -> None:
         await self.bind("q", "quit", "Quit")
@@ -157,16 +156,15 @@ class Chat(App):
 
     async def action_submit(self) -> None:
         text = self.message_input.value
-        event = Event(username="bitjockey", text=text)
-
-        # Send message to bot
-        self.bot.receive(event)
-        self.message_input.value = ""
-        await self.message_list.update(MessageList(messages=self.bot.history))
+        message = {
+            "timestamp": datetime.now(),
+            "username": "yourusername",
+            "text": text,
+        }
+        self.messages.append(message)
+        await self.message_list.update(MessageList(messages=self.messages))
         self.message_list.page_down()
-
-        # await self.message_list.update(MessageList(messages=self.bot.history))
-        # self.message_list.page_down()
+        self.message_input.value = ""
 
     async def action_reset_focus(self) -> None:
         self.current_index = -1
