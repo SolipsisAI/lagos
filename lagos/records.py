@@ -1,12 +1,11 @@
 from datetime import datetime
 
-from sqlite3 import Row
-from typing import Union, Dict
+from typing import Tuple, Union, Dict
 
 
 class UserRecord:
-    def __init__(self, row: Union[Row, Dict]) -> None:
-        if isinstance(row, Row):
+    def __init__(self, row: Union[Tuple, Dict]) -> None:
+        if isinstance(row, tuple):
             self.id = row[0]
             self.name = row[1]
             self.is_bot = bool(row[2])
@@ -25,8 +24,9 @@ class UserRecord:
 
 
 class MessageRecord:
-    def __init__(self, row: Union[Row, Dict]) -> None:
-        if isinstance(row, Row):
+    def __init__(self, row: Union[Tuple, Dict]) -> None:
+        print("hello")
+        if isinstance(row, tuple):
             self.id = row[0]
             self.author_id = row[1]
             self.conversation_id = row[2]

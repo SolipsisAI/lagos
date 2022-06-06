@@ -138,7 +138,7 @@ def last_message(con: sqlite3.Connection):
     )
     result = cur.fetchone()
 
-    return result
+    return MessageRecord(result)
 
 
 def get_users(con: sqlite3.Connection):
