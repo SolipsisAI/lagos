@@ -1,3 +1,7 @@
+import tempfile
+
+from persistqueue import Queue
+
 from lagos.pipelines import load_pipeline
 
 from lagos import store
@@ -9,6 +13,8 @@ class Bot:
         self.model = model
         self.con = store.load()
         self.pipeline = None
+        dirpath = tempfile.mkdtemp()
+        self.q = Queue(dirpath)
 
     @property
     def last_event(self):
@@ -21,6 +27,8 @@ class Bot:
     async def receive(self, message: MessageRecord):
         """Receive an input message"""
         store.insert_message(self.con, message)
+
+        self.q.put(self.last_event, block=False)
 
         return self.last_event
 
