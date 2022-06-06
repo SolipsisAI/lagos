@@ -72,6 +72,8 @@ class CustomFooter(Footer):
 class MessageList(Widget):
     """Override the default Header for Styling"""
 
+    mouse_over = Reactive(False)
+
     def __init__(self, messages: List[Dict] = None) -> None:
         super().__init__()
         self.tall = True
@@ -132,6 +134,8 @@ class Chat(App):
         await self.view.dock(CustomFooter(), edge="bottom")
 
         self.message_list = MessageList()
+        self.message_view = ScrollView(gutter=1)
+
         self.message_input = TextInput(
             name="message_input",
             placeholder="Enter your message",
@@ -139,6 +143,7 @@ class Chat(App):
         )
         self.message_input.on_change_handler_name = "handle_message_input_on_change"
 
+        # Setup Grid
         grid = await self.view.dock_grid()
 
         grid.add_column(name="col")
@@ -147,14 +152,14 @@ class Chat(App):
         grid.add_row(name="bottom", fraction=1, size=3)
 
         grid.add_areas(
-            message_list="col-start|col-end,top",
+            message_view="col-start|col-end,top",
             message_input="col-start|col-end,bottom",
         )
 
         grid.set_align("stretch", "stretch")
-
+        
         grid.place(
-            message_list=self.message_list,
+            message_view=self.message_view,
             message_input=self.message_input,
         )
 
@@ -178,7 +183,7 @@ class Chat(App):
             "text": text,
         }
         self.message_list.messages.append(message)
-        self.message_list.scroll_view.page_down()
+        self.message_view.page_down()
         self.message_input.value = ""
 
     async def action_reset_focus(self) -> None:
