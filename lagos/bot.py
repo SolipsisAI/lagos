@@ -25,28 +25,35 @@ class Bot:
             self.pipeline = load_pipeline("conversational", model=self.model)
 
     async def receive(self, message: MessageRecord):
+        await self.add(message)
+        await self.respond()
+
+    async def add(self, message: MessageRecord):
         """Receive an input message"""
-        store.insert_message(self.con, message)
+        msg = store.insert_message(self.con, message)
+        self.q.put(msg, block=False)
 
-        self.q.put(self.last_event, block=False)
-
-        return self.last_event
+        return msg
 
     async def respond(self):
         """Response to the last message"""
         self.load_pipeline()
 
-        event = self.last_event
+        received = self.q.get(block=False)
 
-        conversation_id = event.conversation_id
+        conversation_id = received.conversation_id
         conversation_id, conversation = self.pipeline.predict(
-            conversation_id=conversation_id, text=event.text
+            conversation_id=conversation_id, text=received.text
         )
         text = conversation.generated_responses[-1]
-        message = MessageRecord(
+        response = MessageRecord(
             {"author_id": 1, "conversation_id": conversation_id, "text": text}
         )
 
-        store.insert_message(self.con, message)
+        store.insert_message(self.con, response)
+
+        self.q.task_done()
+
+        print(response)
 
         return self.last_event
