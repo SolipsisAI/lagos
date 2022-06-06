@@ -165,8 +165,6 @@ class Chat(App):
             message_input=self.message_input,
         )
 
-        self.bot = Bot()
-
     async def action_next_tab_index(self) -> None:
         """Changes the focus to the next form field"""
         if self.current_index < len(self.tab_index) - 1:
@@ -180,6 +178,9 @@ class Chat(App):
             await getattr(self, self.tab_index[self.current_index]).focus()
 
     async def action_submit(self) -> None:
+        if self.bot is None:
+            self.bot = Bot()
+
         text = self.message_input.value
 
         bot_event = BotEvent(username="bitjockey", text=text)
@@ -187,9 +188,6 @@ class Chat(App):
 
         self.message_list.messages.append(bot_event)
         self.message_input.value = ""
-
-        await self.bot.respond()
-        self.message_list.messages.append(self.bot.last_response)
 
     async def action_reset_focus(self) -> None:
         self.current_index = -1
