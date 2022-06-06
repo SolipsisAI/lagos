@@ -7,6 +7,13 @@ from datetime import datetime
 DB_NAME = "lagos.db"
 
 
+class User:
+    def __init__(self, row: sqlite3.Row) -> None:
+        self.id = row[0]
+        self.name = row[1]
+        self.is_bot = bool(row[2])
+
+
 def load(name: str = DB_NAME) -> sqlite3.Connection:
     db_exists = Path(name).exists()
     con = sqlite3.connect(name)
@@ -115,3 +122,12 @@ def last_message(con: sqlite3.Connection):
     result = cur.fetchone()
 
     return result
+
+
+def get_users(con: sqlite3.Connection):
+    cur = con.cursor()
+
+    cur.execute("SELECT * FROM users")
+    results = cur.fetchall()
+
+    return list(map(User, results))
