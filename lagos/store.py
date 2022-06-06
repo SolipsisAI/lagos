@@ -7,7 +7,7 @@ from datetime import datetime
 DB_NAME = "lagos.db"
 
 
-class User:
+class UserRecord:
     def __init__(self, row: sqlite3.Row) -> None:
         self.id = row[0]
         self.name = row[1]
@@ -19,6 +19,25 @@ class User:
         id: {self.id}
         name: {self.name}
         is_bot: {self.is_bot}
+        """
+
+
+class MessageRecord:
+    def __init__(self, row: sqlite3.Row) -> None:
+        self.id = row[0]
+        self.author_id = row[1]
+        self.recipient_id = row[2]
+        self.text = row[3]
+        self.timestamp = row[4]
+
+    def __repr__(self) -> str:
+        return f"""
+        (Message)
+        id: {self.id}
+        author_id: {self.author_id}
+        recipient_id: {self.recipient_id}
+        text: {self.text}
+        timestamp: {self.timestamp}
         """
 
 
@@ -114,7 +133,7 @@ def get_messages(con: sqlite3.Connection):
     )
     results = cur.fetchall()
 
-    return results
+    return list(map(MessageRecord, results))
 
 
 def last_message(con: sqlite3.Connection):
@@ -122,8 +141,12 @@ def last_message(con: sqlite3.Connection):
 
     cur.execute(
         """
-        SELECT *
-        FROM messages
+        SELECT
+            m.*,
+            u.name as username
+        FROM messages m
+        INNER JOIN users u
+            ON m.author_id = u.id
         ORDER BY timestamp DESC
         """
     )
@@ -138,4 +161,4 @@ def get_users(con: sqlite3.Connection):
     cur.execute("SELECT * FROM users")
     results = cur.fetchall()
 
-    return list(map(User, results))
+    return list(map(UserRecord, results))
