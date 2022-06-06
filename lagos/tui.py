@@ -72,26 +72,44 @@ class CustomFooter(Footer):
 class MessageList(Widget):
     """Override the default Header for Styling"""
 
-    def __init__(self, messages: List[Dict]) -> None:
+    def __init__(self, messages: List[Dict] = None) -> None:
         super().__init__()
         self.tall = True
+        if messages is None:
+            messages = []
         self.messages = messages
+        self.table = None
+        self.scroll_view = None
 
-    def render(self) -> Table:
-        header_table = Table.grid(padding=(0, 1), expand=True)
-        header_table.add_column(
+    def on_mount(self):
+        self.table = Table.grid(padding=(0, 1), expand=True)
+        self.table.add_column(
             "timestamp", justify="left", ratio=0, width=7, style="magenta"
         )
-        header_table.add_column(
+        self.table.add_column(
             "username", justify="right", ratio=0, width=15, style="green"
         )
-        header_table.add_column("text", justify="left", ratio=1)
-        for message in self.messages:
-            timestamp = message["timestamp"].strftime("%H:%M:%S")
-            username = message["username"]
-            text = message["text"]
-            header_table.add_row(timestamp, f"{username} [blue]|[/blue] ", text)
-        return header_table
+        self.table.add_column("text", justify="left", ratio=1)
+        self.scroll_view = ScrollView(gutter=1)
+        self.update_messages() 
+        self.set_interval(0.1, self.update_messages)
+
+    def update_messages(self):
+        if not self.messages:
+            return
+        
+        message = self.messages[-1]
+        timestamp = message["timestamp"].strftime("%H:%M:%S")
+        username = message["username"]
+        text = message["text"]
+        self.table.add_row(timestamp, f"{username} [blue]|[/blue] ", text)
+        self.refresh()
+
+    def render(self) -> Table:
+        #self.scroll_view.update(self.table)
+        #return self.scroll_view
+        self.table.add_row("a", "b", "c")
+        return self.table
 
 
 class Chat(App):
@@ -101,7 +119,6 @@ class Chat(App):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         self.tab_index = ["message_input"]
-        self.messages = []
 
     async def on_load(self) -> None:
         await self.bind("q", "quit", "Quit")
@@ -115,7 +132,7 @@ class Chat(App):
         await self.view.dock(self.header, edge="top")
         await self.view.dock(CustomFooter(), edge="bottom")
 
-        self.message_list = ScrollView(gutter=1)
+        self.message_list = MessageList()
         self.message_input = TextInput(
             name="message_input",
             placeholder="Enter your message",
@@ -161,9 +178,8 @@ class Chat(App):
             "username": "yourusername",
             "text": text,
         }
-        self.messages.append(message)
-        await self.message_list.update(MessageList(messages=self.messages))
-        self.message_list.page_down()
+        self.message_list.messages.append(message)
+        self.message_list.scroll_view.page_down()
         self.message_input.value = ""
 
     async def action_reset_focus(self) -> None:
