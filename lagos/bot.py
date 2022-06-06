@@ -1,16 +1,7 @@
 from lagos.pipelines import load_pipeline
 
 from lagos import store
-from lagos.records import UserRecord, MessageRecord
-from lagos.utils import timestamp
-
-
-class BotEvent:
-    def __init__(self, username: str, text: str, conversation_id=None):
-        self.timestamp = timestamp()
-        self.username = username
-        self.text = text
-        self.conversation_id = conversation_id
+from lagos.records import MessageRecord
 
 
 class Bot:
@@ -44,10 +35,10 @@ class Bot:
             conversation_id=conversation_id, text=event.text
         )
         text = conversation.generated_responses[-1]
-        response_event = BotEvent(
-            username="bot", text=text, conversation_id=conversation_id
+        message = MessageRecord(
+            {"author_id": 1, "conversation_id": conversation_id, "text": text}
         )
-        self.history.append(response_event)
-        self.responses.append(response_event)
+
+        store.insert_message(self.con, message)
 
         return self.last_event

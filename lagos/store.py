@@ -57,9 +57,9 @@ def create(con: sqlite3.Connection) -> sqlite3.Connection:
 
 def setup_users(con: sqlite3.Connection):
     # Bot
-    insert_user(con, name="Erica", is_bot=True)
+    insert_user(con, UserRecord({"name": "Erica", "is_bot": True}))
     # User
-    insert_user(con, name="bitjockey", is_bot=False)
+    insert_user(con, UserRecord({"name": "bitjockey", "is_bot": False}))
 
 
 def insert_message(
