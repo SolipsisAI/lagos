@@ -82,3 +82,12 @@ def insert_user(
     con.commit()
 
     return con
+
+
+def get_messages(con: sqlite3.Connection):
+    cur = con.cursor()
+
+    cur.execute("SELECT * FROM messages")
+    results = cur.fetchall()
+
+    return results
