@@ -1,5 +1,6 @@
 import sqlite3
 
+from typing import Union, Dict
 from pathlib import Path
 from datetime import datetime
 
@@ -8,7 +9,10 @@ DB_NAME = "lagos.db"
 
 
 class UserRecord:
-    def __init__(self, row: sqlite3.Row) -> None:
+    def __init__(self, row: Union[sqlite3.Row, Dict]) -> None:
+        if isinstance(row, dict):
+            row = list(row.values())
+
         self.id = row[0]
         self.name = row[1]
         self.is_bot = bool(row[2])
@@ -23,7 +27,10 @@ class UserRecord:
 
 
 class MessageRecord:
-    def __init__(self, row: sqlite3.Row) -> None:
+    def __init__(self, row: Union[sqlite3.Row, Dict]) -> None:
+        if isinstance(row, dict):
+            row = list(row.values())
+
         self.id = row[0]
         self.author_id = row[1]
         self.recipient_id = row[2]
