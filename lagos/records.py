@@ -48,4 +48,3 @@ class MessageRecord:
         text: {self.text}
         timestamp: {self.timestamp}
         """
-

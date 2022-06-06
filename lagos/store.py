@@ -9,7 +9,6 @@ from lagos.records import UserRecord, MessageRecord
 DB_NAME = "lagos.db"
 
 
-
 def load(name: str = DB_NAME) -> sqlite3.Connection:
     db_exists = Path(name).exists()
     con = sqlite3.connect(name)
@@ -72,7 +71,13 @@ def insert_message(
         """
         INSERT INTO messages VALUES(?, ?, ?, ?, ?)
         """,
-        (None, message.author_id, message.conversation_id, message.text, message.timestamp),
+        (
+            None,
+            message.author_id,
+            message.conversation_id,
+            message.text,
+            message.timestamp,
+        ),
     )
 
     con.commit()
@@ -80,9 +85,7 @@ def insert_message(
     return con
 
 
-def insert_user(
-    con: sqlite3.Connection, user: UserRecord
-) -> UserRecord:
+def insert_user(con: sqlite3.Connection, user: UserRecord) -> UserRecord:
     cur = con.cursor()
 
     cur.execute(
@@ -104,7 +107,6 @@ def last_user(con: sqlite3.Connection):
 
     result = cur.fetchone()
     return UserRecord(result)
-
 
 
 def get_messages(con: sqlite3.Connection):
