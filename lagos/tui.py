@@ -77,12 +77,12 @@ class MessageList(Widget):
     """List view for messages"""
 
     last_message: Reactive[int] = Reactive(0)
+    messages: Reactive[List[MessageRecord]] = Reactive([])
 
-    def __init__(self, messages: List[MessageRecord] = None) -> None:
+    def __init__(self) -> None:
         super().__init__()
         self._table = None
         self.tall = True
-        self.messages = messages if messages else []
 
     def render(self) -> Table:
         self._table = Table.grid(padding=(0, 1), expand=True)
