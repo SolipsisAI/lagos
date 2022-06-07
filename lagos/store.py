@@ -150,7 +150,7 @@ def last_message(con: sqlite3.Connection):
 def get_user(con: sqlite3.Connection, name: str):
     cur = con.cursor()
 
-    cur.execute("SELECT * FROM users WHERE name = ?", (name))
+    cur.execute("SELECT * FROM users WHERE name = ?", [name])
     result = cur.fetchone()
 
     return UserRecord(result)

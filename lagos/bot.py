@@ -18,7 +18,7 @@ class Bot:
         callback=None,
     ):
         self.name = name
-
+        self.bot_user = None
         self.thread = None
         self.pipeline = None
 
@@ -29,12 +29,7 @@ class Bot:
         self.con = store.load()
 
         # Setup queue
-        self.q = SQLiteQueue("lagos_queue.db", multithreading=daemon)
-
-        # Get users
-        # bot_user = store.get_user(self.con, name=name)
-        # self.bot_id = bot_user.id
-        self.bot_id = 1
+        self.q = SQLiteQueue(".lagos_queue", multithreading=daemon)
 
         # Run the bot in a different thread
         if daemon:
@@ -46,8 +41,13 @@ class Bot:
     def last_event(self):
         return store.last_message(self.con)
 
-    def load_pipeline(self):
-        if self.pipeline is None:
+    def load_resources(self):
+        # Get bot user
+        if not bool(self.bot_user):
+            self.bot_user = store.get_user(self.con, name=self.name)
+
+        # Load pipeline
+        if not bool(self.pipeline):
             self.pipeline = load_pipeline("conversational", model=self.model)
 
     async def add(self, message: MessageRecord):
@@ -55,13 +55,14 @@ class Bot:
         msg = store.insert_message(self.con, message)
         self.q.put(msg)
 
-        if self.callback:
+        if bool(self.callback) and self.callback:
             self.callback(msg)
 
         return msg
 
     def run(self):
-        self.load_pipeline()
+        self.load_resources()
+
         while True:
             if self.q.empty():
                 continue
@@ -79,14 +80,18 @@ class Bot:
         text = conversation.generated_responses[-1]
 
         response = MessageRecord(
-            {"author_id": self.bot_id, "conversation_id": conversation_id, "text": text}
+            {
+                "author_id": self.bot_user.id,
+                "conversation_id": conversation_id,
+                "text": text,
+            }
         )
 
         store.insert_message(self.con, response)
 
         self.q.task_done()
 
-        if self.callback is not None:
+        if bool(self.callback):
             self.callback(self.last_event)
 
         return self.last_event
