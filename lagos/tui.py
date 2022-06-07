@@ -188,7 +188,6 @@ class Chat(App):
         )
 
         await self.bot.add(message)
-        # await self.message_view.update(self.message_list)
 
     async def action_reset_focus(self) -> None:
         self.current_index = -1
