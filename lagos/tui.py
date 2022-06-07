@@ -125,7 +125,7 @@ class Chat(App):
         await self.view.dock(CustomFooter(), edge="bottom")
 
         self.message_list = MessageList()
-        # self.message_view = ScrollView(gutter=1)
+        self.message_view = ScrollView(gutter=1)
         self.message_input = TextInput(
             name="message_input",
             placeholder="Enter your message",
@@ -148,16 +148,16 @@ class Chat(App):
         grid.set_align("stretch", "stretch")
 
         grid.place(
-            message_view=self.message_list,
+            message_view=self.message_view,
             message_input=self.message_input,
         )
 
         self.bot = Bot(daemon=True, callback=self.add_message)
 
     async def watch_last_message_id(self, value: int) -> None:
-        # await self.message_view.update(MessageList(self.messages))
         self.message_list.refresh()
-        # self.message_view.page_down()
+        await self.message_view.update(self.message_list)
+        self.message_view.page_down()
 
     async def action_next_tab_index(self) -> None:
         """Changes the focus to the next form field"""
