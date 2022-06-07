@@ -25,13 +25,14 @@ class UserRecord:
 
 class MessageRecord:
     def __init__(self, row: Union[Tuple, Dict]) -> None:
+        self.username = ""
         if isinstance(row, tuple):
             self.id = row[0]
             self.author_id = row[1]
             self.conversation_id = row[2]
             self.text = row[3]
             self.timestamp = row[4]
-            if len(row) == 5:
+            if len(row) == 6:
                 self.username = row[5]
         elif isinstance(row, dict):
             self.id = row.get("id")

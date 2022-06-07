@@ -1,3 +1,4 @@
+from pyclbr import Function
 import threading
 import tempfile
 
@@ -15,7 +16,8 @@ class Bot:
         *,
         name: str = "Erica",
         model: str = "microsoft/DialoGPT-medium",
-        daemon: bool = False
+        daemon: bool = False,
+        callback: Function = None,
     ):
         self.thread = None
         self.pipeline = None
@@ -37,6 +39,7 @@ class Bot:
 
         # Threading
         if daemon:
+            self.callback = callback
             self.thread = threading.Thread(target=self.run, args=())
             self.daemon = True
             self.thread.start()
@@ -54,6 +57,9 @@ class Bot:
         msg = store.insert_message(self.con, message)
         self.q.put(msg)
 
+        if self.callback:
+            self.callback(msg)
+
         return msg
 
     def run(self):
@@ -62,6 +68,9 @@ class Bot:
             if self.q.empty():
                 continue
             self.respond()
+
+            if self.callback:
+                self.callback(self.last_event)
 
     def respond(self):
         """Response to the last message"""

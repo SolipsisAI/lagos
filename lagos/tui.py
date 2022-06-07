@@ -159,6 +159,8 @@ class Chat(App):
             message_input=self.message_input,
         )
 
+        self.bot = Bot(daemon=True, callback=self.message_list.add_message)
+
     async def action_next_tab_index(self) -> None:
         """Changes the focus to the next form field"""
         if self.current_index < len(self.tab_index) - 1:
@@ -175,12 +177,13 @@ class Chat(App):
         text = self.message_input.value
         message = MessageRecord(
             {
+                "conversation_id": "12345",
                 "username": "bitjockey",
                 "author_id": 2,
                 "text": text,
             }
         )
-        self.message_list.add_message(message)
+        self.bot.add(message)
         await self.message_view.update(self.message_list)
         self.message_view.page_down()
         self.message_input.value = ""
@@ -191,9 +194,6 @@ class Chat(App):
 
     async def handle_message_input_on_change(self, message: Message) -> None:
         self.log(f"Message input change: {message.sender.value}")
-
-
-# bot = Bot(daemon=True)
 
 
 if __name__ == "__main__":
