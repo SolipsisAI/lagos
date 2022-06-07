@@ -25,7 +25,6 @@ class UserRecord:
 
 class MessageRecord:
     def __init__(self, row: Union[Tuple, Dict]) -> None:
-        self.username = ""
         if isinstance(row, tuple):
             self.id = row[0]
             self.author_id = row[1]
