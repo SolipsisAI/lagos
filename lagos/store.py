@@ -9,9 +9,11 @@ from lagos.records import UserRecord, MessageRecord
 DB_NAME = "lagos.db"
 
 
-def load(name: str = DB_NAME) -> sqlite3.Connection:
+def load(
+    name: str = DB_NAME,
+) -> sqlite3.Connection:
     db_exists = Path(name).exists()
-    con = sqlite3.connect(name)
+    con = sqlite3.connect(name, check_same_thread=False)
 
     if not db_exists:
         con = create(con)
@@ -103,7 +105,7 @@ def insert_user(con: sqlite3.Connection, user: UserRecord) -> UserRecord:
 def last_user(con: sqlite3.Connection):
     cur = con.cursor()
 
-    cur.execute("SELECT * FROM users ORDER BY DESC")
+    cur.execute("SELECT * FROM users ORDER BY id DESC")
 
     result = cur.fetchone()
     return UserRecord(result)
@@ -139,6 +141,15 @@ def last_message(con: sqlite3.Connection):
     result = cur.fetchone()
 
     return MessageRecord(result)
+
+
+def get_user(con: sqlite3.Connection, name: str):
+    cur = con.cursor()
+
+    cur.execute("SELECT * FROM users WHERE name = ?", (name))
+    result = cur.fetchone()
+
+    return UserRecord(result)
 
 
 def get_users(con: sqlite3.Connection):
