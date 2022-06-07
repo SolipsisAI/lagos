@@ -4,7 +4,6 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Dict, List
 
-from rich.panel import Panel
 from rich.style import Style
 from rich.table import Table
 from rich.text import Text
@@ -15,8 +14,6 @@ from textual.widget import Widget
 from textual.widgets import Footer, Header, ScrollView
 
 from textual_inputs import TextInput
-
-from lagos.bot import Bot, BotEvent
 
 if TYPE_CHECKING:
     from textual.message import Message
@@ -75,44 +72,26 @@ class CustomFooter(Footer):
 class MessageList(Widget):
     """Override the default Header for Styling"""
 
-    mouse_over = Reactive(False)
-
-    def __init__(self, messages: List[Dict] = None) -> None:
+    def __init__(self, messages: List[Dict]) -> None:
         super().__init__()
         self.tall = True
-        if messages is None:
-            messages = []
         self.messages = messages
-        self.table = None
-        self.scroll_view = None
-
-    def on_mount(self):
-        self.table = Table.grid(padding=(0, 1), expand=True)
-        self.table.add_column(
-            "timestamp", justify="left", ratio=0, width=7, style="magenta"
-        )
-        self.table.add_column(
-            "username", justify="right", ratio=0, width=15, style="green"
-        )
-        self.table.add_column("text", justify="left", ratio=1)
-        self.update_messages()
-        self.set_interval(0.1, self.update_messages)
-
-    def update_messages(self):
-        if not self.messages:
-            return
-
-        message = self.messages.pop(0)
-
-        timestamp = message.timestamp
-        username = message.username
-        text = message.text
-
-        self.table.add_row(timestamp, f"{username} [blue]|[/blue] ", text)
-        self.refresh()
 
     def render(self) -> Table:
-        return self.table
+        header_table = Table.grid(padding=(0, 1), expand=True)
+        header_table.add_column(
+            "timestamp", justify="left", ratio=0, width=7, style="magenta"
+        )
+        header_table.add_column(
+            "username", justify="right", ratio=0, width=15, style="green"
+        )
+        header_table.add_column("text", justify="left", ratio=1)
+        for message in self.messages:
+            timestamp = message["timestamp"].strftime("%H:%M:%S")
+            username = message["username"]
+            text = message["text"]
+            header_table.add_row(timestamp, f"{username} [blue]|[/blue] ", text)
+        return header_table
 
 
 class Chat(App):
@@ -121,8 +100,8 @@ class Chat(App):
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-        self.bot = None
         self.tab_index = ["message_input"]
+        self.messages = []
 
     async def on_load(self) -> None:
         await self.bind("q", "quit", "Quit")
@@ -136,8 +115,7 @@ class Chat(App):
         await self.view.dock(self.header, edge="top")
         await self.view.dock(CustomFooter(), edge="bottom")
 
-        self.message_list = MessageList()
-
+        self.message_list = ScrollView(gutter=1)
         self.message_input = TextInput(
             name="message_input",
             placeholder="Enter your message",
@@ -145,7 +123,6 @@ class Chat(App):
         )
         self.message_input.on_change_handler_name = "handle_message_input_on_change"
 
-        # Setup Grid
         grid = await self.view.dock_grid()
 
         grid.add_column(name="col")
@@ -178,15 +155,15 @@ class Chat(App):
             await getattr(self, self.tab_index[self.current_index]).focus()
 
     async def action_submit(self) -> None:
-        if self.bot is None:
-            self.bot = Bot()
-
         text = self.message_input.value
-
-        bot_event = BotEvent(username="bitjockey", text=text)
-        self.bot.receive(bot_event)
-
-        self.message_list.messages.append(bot_event)
+        message = {
+            "timestamp": datetime.now(),
+            "username": "yourusername",
+            "text": text,
+        }
+        self.messages.append(message)
+        await self.message_list.update(MessageList(messages=self.messages))
+        self.message_list.page_down()
         self.message_input.value = ""
 
     async def action_reset_focus(self) -> None:
@@ -195,3 +172,7 @@ class Chat(App):
 
     async def handle_message_input_on_change(self, message: Message) -> None:
         self.log(f"Message input change: {message.sender.value}")
+
+
+if __name__ == "__main__":
+    Chat.run(title="Solipsis", log="textual.log")
