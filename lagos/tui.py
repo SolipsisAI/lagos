@@ -1,8 +1,7 @@
 # app.py
 from __future__ import annotations
 
-from datetime import datetime
-from typing import TYPE_CHECKING, Dict, List, Optional
+from typing import TYPE_CHECKING, List
 
 from rich.style import Style
 from rich.table import Table
@@ -13,7 +12,6 @@ from textual.widget import Widget, Reactive
 from textual.widgets import Footer, Header, ScrollView
 
 from textual_inputs import TextInput
-from typer import Option
 
 if TYPE_CHECKING:
     from textual.message import Message
@@ -76,19 +74,19 @@ class MessageList(Widget):
     """List view for messages"""
 
     last_message: Reactive[int] = Reactive(0)
-    messages: Reactive[List[MessageRecord]] = Reactive([])
 
     def __init__(self) -> None:
         super().__init__()
         self._table = None
         self.tall = True
+        self.messages = []
 
-    async def watch_messages(self, value: List[MessageRecord]) -> None:
+    async def watch_last_message(self, value: int) -> None:
         self.refresh()
 
     def add_message(self, message: MessageRecord):
         self.messages.append(message)
-        self.refresh()
+        self.last_message = self.messages[-1].id
 
     def update_messages(self):
         for message in self.messages:
@@ -182,7 +180,7 @@ class Chat(App):
                 "text": text,
             }
         )
-        self.bot.add(message)
+        await self.bot.add(message)
         await self.message_view.update(self.message_list)
         self.message_view.page_down()
         self.message_input.value = ""
