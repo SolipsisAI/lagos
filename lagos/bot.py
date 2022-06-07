@@ -69,9 +69,6 @@ class Bot:
                 continue
             self.respond()
 
-            if self.callback:
-                self.callback(self.last_event)
-
     def respond(self):
         """Response to the last message"""
         received = self.q.get()
@@ -90,6 +87,9 @@ class Bot:
         store.insert_message(self.con, response)
 
         self.q.task_done()
+
+        if self.callback is not None:
+            self.callback(self.last_event)
 
         return self.last_event
 

@@ -117,7 +117,6 @@ class Chat(App):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         self.tab_index: List[str] = ["message_input"]
-        self.messages: List[MessageRecord] = []
 
     async def on_load(self) -> None:
         await self.bind("q", "quit", "Quit")
