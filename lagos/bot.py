@@ -1,7 +1,6 @@
 import threading
-import tempfile
 
-from persistqueue import Queue
+from persistqueue import SQLiteQueue
 
 from lagos.pipelines import load_pipeline
 
@@ -30,8 +29,7 @@ class Bot:
         self.con = store.load()
 
         # Setup queue
-        dirpath = tempfile.mkdtemp()
-        self.q = Queue(dirpath)
+        self.q = SQLiteQueue("lagos_queue.db", multithreading=daemon)
 
         # Get users
         # bot_user = store.get_user(self.con, name=name)
