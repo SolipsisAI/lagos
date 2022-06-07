@@ -3,6 +3,7 @@ import threading
 from persistqueue import SQLiteQueue
 
 from lagos.pipelines import load_pipeline
+from lagos.pipelines.conversational import Conversation
 
 from lagos import store
 from lagos.records import MessageRecord
@@ -21,6 +22,7 @@ class Bot:
         self.bot_user = None
         self.thread = None
         self.pipeline = None
+        self.conversation = None
 
         # Model name
         self.model = model
@@ -52,6 +54,11 @@ class Bot:
 
     async def add(self, message: MessageRecord):
         """Receive an input message"""
+        if not bool(self.conversation):
+            self.conversation = Conversation(message.text)
+
+        message.conversation_id = str(self.conversation.uuid)
+
         msg = store.insert_message(self.con, message)
         self.q.put(msg)
 
