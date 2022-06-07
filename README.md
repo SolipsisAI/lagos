@@ -4,6 +4,7 @@ This was inspired by _The Librarian_ program built by the character _Lagos_ in t
 
 - [Lagos](#lagos)
   - [Usage](#usage)
+    - [Launch the text-based app (TUI)](#launch-the-text-based-app-tui)
     - [Start the websocket and client](#start-the-websocket-and-client)
     - [(Recommended) Run the websocket and client from Docker](#recommended-run-the-websocket-and-client-from-docker)
   - [Chatting](#chatting)
@@ -14,17 +15,27 @@ This was inspired by _The Librarian_ program built by the character _Lagos_ in t
 
 ## Usage
 
+NOTE: if setup was done with `pdm`, you need to prepend `lagos` with `pdm run`.
+
+### Launch the text-based app (TUI)
+
+We provide a simple TUI with which to interact with the chatbots. To launch:
+
+```shell
+lagos app
+```
+
 ### Start the websocket and client
 
-```
+```shell
 # Start a websocket server
-pdm run lagos serve
+lagos serve
 ```
 
 Then, load the chatbot client with the specified model:
 
-```
-pdm run lagos start -m "models/mybot-output"
+```shell
+lagos start -m "models/mybot-output"
 ```
 
 The model here is whatever transformers dialogpt model you've fine-tuned. So in my case, I previously did fine-tuning on `dialogpt-small` using chat logs from a Discord channel...
