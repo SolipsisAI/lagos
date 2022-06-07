@@ -9,8 +9,7 @@ from rich.table import Table
 from rich.text import Text
 from textual import events
 from textual.app import App
-from textual.reactive import Reactive
-from textual.widget import Widget
+from textual.widget import Widget, Reactive
 from textual.widgets import Footer, Header, ScrollView
 
 from textual_inputs import TextInput
@@ -84,8 +83,18 @@ class MessageList(Widget):
         self._table = None
         self.tall = True
 
-    def watch(self) -> None:
-        return super().watch(self.messages, self.refresh)
+    async def watch_messages(self, value: List[MessageRecord]) -> None:
+        self.refresh()
+
+    def add_message(self, message: MessageRecord):
+        self.messages.append(message)
+        self.refresh()
+
+    def update_messages(self):
+        for message in self.messages:
+            self._table.add_row(
+                message.timestamp, f"{message.username} [blue]|[/blue] ", message.text
+            )
 
     def render(self) -> Table:
         self._table = Table.grid(padding=(0, 1), expand=True)
@@ -96,11 +105,7 @@ class MessageList(Widget):
             "username", justify="right", ratio=0, width=20, style="green"
         )
         self._table.add_column("text", justify="left", ratio=1)
-
-        for message in self.messages:
-            self._table.add_row(
-                message.timestamp, f"{message.username} [blue]|[/blue] ", message.text
-            )
+        self.update_messages()
 
         return self._table
 
@@ -175,8 +180,7 @@ class Chat(App):
                 "text": text,
             }
         )
-        self.message_list.messages.append(message)
-        self.message_list.refresh()
+        self.message_list.add_message(message)
         await self.message_view.update(self.message_list)
         self.message_view.page_down()
         self.message_input.value = ""
