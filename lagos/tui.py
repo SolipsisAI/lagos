@@ -73,7 +73,7 @@ class CustomFooter(Footer):
 class MessageList(Widget):
     """List view for messages"""
 
-    last_message: Reactive[int] = Reactive(0)
+    last_message: Reactive[MessageRecord] = Reactive(None)
 
     def __init__(self) -> None:
         super().__init__()
@@ -81,14 +81,13 @@ class MessageList(Widget):
         self.tall = True
         self.messages = []
 
-    async def watch_last_message(self, value: int) -> None:
+    async def watch_last_message(self, message: MessageRecord) -> None:
+        print(message)
         self.refresh()
 
     def add_message(self, message: MessageRecord):
-        if message.author_id == 1:
-            print(message)
         self.messages.append(message)
-        self.last_message = self.messages[-1].id
+        self.last_message = self.messages[-1]
 
     def update_messages(self):
         for message in self.messages:
