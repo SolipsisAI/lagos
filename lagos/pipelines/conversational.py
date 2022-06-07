@@ -9,8 +9,13 @@ class Conversational(BasePipeline):
     def __init__(self, model: str = None, tokenizer: str = None, device: int = -1):
         if model is None:
             model = "microsoft/DialoGPT-medium"
-        if tokenizer is None:
+
+        if model is not None and tokenizer is None:
+            # Use tokenizer from model
+            tokenizer = model
+        elif tokenizer is None:
             tokenizer = "microsoft/DialoGPT-medium"
+
         super().__init__(
             name="conversational",
             options={"model": model, "tokenizer": tokenizer},

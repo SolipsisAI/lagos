@@ -85,6 +85,8 @@ class MessageList(Widget):
         self.refresh()
 
     def add_message(self, message: MessageRecord):
+        if message.author_id == 1:
+            print(message)
         self.messages.append(message)
         self.last_message = self.messages[-1].id
 
@@ -172,6 +174,10 @@ class Chat(App):
 
     async def action_submit(self) -> None:
         text = self.message_input.value
+
+        if not text:
+            return
+
         message = MessageRecord(
             {
                 "conversation_id": "12345",

@@ -15,7 +15,7 @@ class Bot:
         self,
         *,
         name: str = "Erica",
-        model: str = "microsoft/DialoGPT-medium",
+        model: str = "microsoft/DialoGPT-large",
         daemon: bool = False,
         callback: Function = None,
     ):
