@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from textual.message import Message
 
 from lagos.bot import Bot
-from lagos.records import UserRecord, MessageRecord
+from lagos.records import MessageRecord
 
 
 class CustomHeader(Header):
