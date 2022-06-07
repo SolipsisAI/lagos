@@ -73,21 +73,11 @@ class CustomFooter(Footer):
 class MessageList(Widget):
     """List view for messages"""
 
-    last_message: Reactive[MessageRecord] = Reactive(None)
-
-    def __init__(self) -> None:
+    def __init__(self, messages: List[MessageRecord] = None) -> None:
         super().__init__()
         self._table = None
         self.tall = True
-        self.messages = []
-
-    async def watch_last_message(self, message: MessageRecord) -> None:
-        print(message)
-        self.refresh()
-
-    def add_message(self, message: MessageRecord):
-        self.messages.append(message)
-        self.last_message = self.messages[-1]
+        self.messages = messages if bool(messages) else []
 
     def update_messages(self):
         for message in self.messages:
@@ -112,10 +102,15 @@ class MessageList(Widget):
 class Chat(App):
 
     current_index: Reactive[int] = Reactive(-1)
+    last_message_id: Reactive[int] = Reactive(0)
 
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         self.tab_index: List[str] = ["message_input"]
+
+    def add_message(self, message: MessageRecord):
+        self.message_list.messages.append(message)
+        self.last_message_id = self.message_list.messages[-1].id
 
     async def on_load(self) -> None:
         await self.bind("q", "quit", "Quit")
@@ -130,7 +125,7 @@ class Chat(App):
         await self.view.dock(CustomFooter(), edge="bottom")
 
         self.message_list = MessageList()
-        self.message_view = ScrollView(gutter=1)
+        # self.message_view = ScrollView(gutter=1)
         self.message_input = TextInput(
             name="message_input",
             placeholder="Enter your message",
@@ -153,11 +148,16 @@ class Chat(App):
         grid.set_align("stretch", "stretch")
 
         grid.place(
-            message_view=self.message_view,
+            message_view=self.message_list,
             message_input=self.message_input,
         )
 
-        self.bot = Bot(daemon=True, callback=self.message_list.add_message)
+        self.bot = Bot(daemon=True, callback=self.add_message)
+
+    async def watch_last_message_id(self, value: int) -> None:
+        # await self.message_view.update(MessageList(self.messages))
+        self.message_list.refresh()
+        # self.message_view.page_down()
 
     async def action_next_tab_index(self) -> None:
         """Changes the focus to the next form field"""
@@ -173,6 +173,7 @@ class Chat(App):
 
     async def action_submit(self) -> None:
         text = self.message_input.value
+        self.message_input.value = ""
 
         if not text:
             return
@@ -185,10 +186,9 @@ class Chat(App):
                 "text": text,
             }
         )
+
         await self.bot.add(message)
-        await self.message_view.update(self.message_list)
-        self.message_view.page_down()
-        self.message_input.value = ""
+        # await self.message_view.update(self.message_list)
 
     async def action_reset_focus(self) -> None:
         self.current_index = -1
