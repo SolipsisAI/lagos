@@ -1,11 +1,14 @@
 from argparse import ArgumentError
-from re import I
 from typing import Dict, List, Union
 from collections import defaultdict
 
 from transformers import pipeline, Conversation, AutoTokenizer
+from transformers.utils import logging
 
 from lagos.data_source import load_data_source
+
+# Only show error
+logging.set_verbosity_error()
 
 
 class BasePipeline:

@@ -85,10 +85,8 @@ class Bot:
         return self.last_event
 
 
-bot = Bot(daemon=True)
-
-
 if __name__ == "__main__":
+    bot = Bot(daemon=True)
     while True:
         text = input("> ")
 
