@@ -117,8 +117,10 @@ def get_messages(con: sqlite3.Connection):
     cur.execute(
         """
         SELECT
-            *
-        FROM messages
+            m.*,
+            u.name as username
+        FROM messages m
+        INNER JOIN users u ON m.author_id = u.id
         ORDER BY messages.timestamp ASC
         """
     )

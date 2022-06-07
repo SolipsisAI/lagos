@@ -82,7 +82,7 @@ class MessageList(Widget):
         super().__init__()
         self._table = None
         self.tall = True
-        self.messages = messages 
+        self.messages = messages
 
     def render(self) -> Table:
         self._table = Table.grid(padding=(0, 1), expand=True)
@@ -90,13 +90,13 @@ class MessageList(Widget):
             "timestamp", justify="left", ratio=0, width=20, style="magenta"
         )
         self._table.add_column(
-            "username", justify="right", ratio=0, width=15, style="green"
+            "username", justify="right", ratio=0, width=20, style="green"
         )
         self._table.add_column("text", justify="left", ratio=1)
 
         for message in self.messages:
             self._table.add_row(
-                message.timestamp, f"{message.author_id} [b]|[/] ", message.text
+                message.timestamp, f"{message.username} [blue]|[/blue] ", message.text
             )
 
         return self._table
@@ -164,12 +164,15 @@ class Chat(App):
 
     async def action_submit(self) -> None:
         text = self.message_input.value
-        message = MessageRecord({
-            "author_id": 2,
-            "text": text,
-        })
+        message = MessageRecord(
+            {
+                "username": "bitjockey",
+                "author_id": 2,
+                "text": text,
+            }
+        )
         self.messages.append(message)
-        await self.message_view.update(MessageList(messages=self.messages)) 
+        await self.message_view.update(MessageList(messages=self.messages))
         self.message_view.page_down()
         self.message_input.value = ""
 
@@ -181,7 +184,7 @@ class Chat(App):
         self.log(f"Message input change: {message.sender.value}")
 
 
-#bot = Bot(daemon=True)
+# bot = Bot(daemon=True)
 
 
 if __name__ == "__main__":

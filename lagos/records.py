@@ -31,12 +31,17 @@ class MessageRecord:
             self.conversation_id = row[2]
             self.text = row[3]
             self.timestamp = row[4]
+            if len(row) == 5:
+                self.username = row[5]
         elif isinstance(row, dict):
             self.id = row.get("id")
             self.author_id = row.get("author_id")
             self.conversation_id = row.get("conversation_id")
             self.text = row.get("text")
-            self.timestamp = row.get("timestamp", datetime.now().isoformat())
+            self.timestamp = row.get(
+                "timestamp", datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            )
+            self.username = row.get("username")
 
     def __repr__(self) -> str:
         return f"""
@@ -46,4 +51,5 @@ class MessageRecord:
         conversation_id: {self.conversation_id}
         text: {self.text}
         timestamp: {self.timestamp}
+        username: {self.username}
         """
