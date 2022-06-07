@@ -80,8 +80,12 @@ class Bot:
         received = self.q.get()
 
         conversation_id = received.conversation_id
+
+        if not self.pipeline.get_context(conversation_id):
+            self.pipeline.add_context(self.conversation, text=received.text)
+         
         conversation_id, conversation = self.pipeline.predict(
-            conversation_id=conversation_id, text=received.text
+            conversation_id=conversation_id
         )
 
         text = conversation.generated_responses[-1]

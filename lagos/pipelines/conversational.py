@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, Union
 
 from transformers import Conversation
 
@@ -23,16 +23,26 @@ class Conversational(BasePipeline):
         )
         self.context = {}
 
-    def add_context(self, conversation_id: str, text: str):
-        if conversation_id not in self.context:
-            conversation = Conversation()
-            conversation_id = str(conversation.uuid)
-            self.context[conversation_id] = conversation
-        self.context[conversation_id].add_user_input(text)
+    def add_context(self, conversation_obj: Union[str, Conversation], text: str = None):
+        conversation_id = None
+
+        if isinstance(conversation_obj, Conversation):
+            conversation_id = str(conversation_obj.uuid)
+            self.context[conversation_id] = conversation_obj
+        elif isinstance(conversation_obj, str):
+            conversation_id = conversation_obj
+            if conversation_id not in self.context:
+                conversation = Conversation()
+                conversation_id = str(conversation.uuid)
+                self.context[conversation_id] = conversation
+        
+        if text:
+            self.context[conversation_id].add_user_input(text)
+
         return conversation_id
 
     def get_context(self, conversation_id: str):
-        return self.context[conversation_id]
+        return self.context.get(conversation_id)
 
     def predict(
         self, conversation_id: str = None, text: str = None
