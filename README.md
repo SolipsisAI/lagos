@@ -19,6 +19,8 @@ NOTE: if setup was done with `pdm`, you need to prepend `lagos` with `pdm run`.
 
 ### Launch the text-based app (TUI)
 
+![](img/screenshot.png)
+
 We provide a simple TUI with which to interact with the chatbots. To launch:
 
 ```shell
