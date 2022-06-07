@@ -41,8 +41,7 @@ class Bot:
         # Run the bot in a different thread
         if daemon:
             self.callback = callback
-            self.thread = threading.Thread(target=self.run, args=())
-            self.daemon = True
+            self.thread = threading.Thread(target=self.run, args=(), daemon=daemon)
             self.thread.start()
 
     @property
