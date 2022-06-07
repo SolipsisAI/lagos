@@ -70,28 +70,29 @@ class CustomFooter(Footer):
 
 
 class MessageList(Widget):
-    """Override the default Header for Styling"""
+    """List view for messages"""
 
     def __init__(self, messages: List[Dict]) -> None:
         super().__init__()
+        self.table = None
         self.tall = True
         self.messages = messages
 
     def render(self) -> Table:
-        header_table = Table.grid(padding=(0, 1), expand=True)
-        header_table.add_column(
+        self.table = Table.grid(padding=(0, 1), expand=True)
+        self.table.add_column(
             "timestamp", justify="left", ratio=0, width=7, style="magenta"
         )
-        header_table.add_column(
+        self.table.add_column(
             "username", justify="right", ratio=0, width=15, style="green"
         )
-        header_table.add_column("text", justify="left", ratio=1)
+        self.table.add_column("text", justify="left", ratio=1)
         for message in self.messages:
             timestamp = message["timestamp"].strftime("%H:%M:%S")
             username = message["username"]
             text = message["text"]
-            header_table.add_row(timestamp, f"{username} [blue]|[/blue] ", text)
-        return header_table
+            self.table.add_row(timestamp, f"{username} [blue]|[/blue] ", text)
+        return self.table
 
 
 class Chat(App):
