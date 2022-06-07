@@ -123,7 +123,6 @@ class Chat(App):
         await self.view.dock(self.header, edge="top")
         await self.view.dock(CustomFooter(), edge="bottom")
 
-        self.message_list = MessageList()
         self.message_view = ScrollView(gutter=1)
         self.message_input = TextInput(
             name="message_input",
@@ -172,8 +171,10 @@ class Chat(App):
                 "text": text,
             }
         )
-        self.message_list.messages.append(message)
-        await self.message_view.update(self.message_list)
+        self.messages.append(message)
+        message_list = MessageList()
+        message_list.messages = self.messages
+        await self.message_view.update(message_list)
         self.message_view.page_down()
         self.message_input.value = ""
 
