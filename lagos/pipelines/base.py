@@ -1,8 +1,9 @@
 from argparse import ArgumentError
+from re import I
 from typing import Dict, List, Union
 from collections import defaultdict
 
-from transformers import pipeline, Conversation
+from transformers import pipeline, Conversation, AutoTokenizer
 
 from lagos.data_source import load_data_source
 
@@ -15,6 +16,11 @@ class BasePipeline:
         options: Dict = None,
         device: int = -1,
     ):
+        if "tokenizer" in options:
+            options["tokenizer"] = AutoTokenizer.from_pretrained(
+                options["tokenizer"], pad_token="<|endoftext|>"
+            )
+
         self.options = options
         self.options["task"] = name
         self.options["device"] = device

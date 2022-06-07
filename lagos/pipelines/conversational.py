@@ -6,10 +6,16 @@ from .base import BasePipeline
 
 
 class Conversational(BasePipeline):
-    def __init__(self, model: str = None, device: int = -1):
+    def __init__(self, model: str = None, tokenizer: str = None, device: int = -1):
         if model is None:
-            model = "microsoft/DialoGPT-large"
-        super().__init__(name="conversational", options={"model": model}, device=device)
+            model = "microsoft/DialoGPT-medium"
+        if tokenizer is None:
+            tokenizer = "microsoft/DialoGPT-medium"
+        super().__init__(
+            name="conversational",
+            options={"model": model, "tokenizer": tokenizer},
+            device=device,
+        )
         self.context = {}
 
     def add_context(self, conversation_id: str, text: str):
