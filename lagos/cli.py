@@ -3,6 +3,9 @@
 import asyncio
 import click
 
+DEFAULT_MODEL = "microsoft/DialoGPT-large"
+DEFAULT_TOKENIZER = "microsoft/DialoGPT-large"
+
 
 @click.group()
 def cli():
@@ -30,10 +33,14 @@ def serve(host, port):
 
 
 @cli.command()
-@click.option("--model", "-m", default="microsoft/DialoGPT-large")
-@click.option("--tokenizer", "-t", default="microsoft/DialoGPT-large")
+@click.option("--model", "-m", default=DEFAULT_MODEL)
+@click.option("--tokenizer", "-t", default=DEFAULT_TOKENIZER)
 def app(model, tokenizer):
     """Launch text-based UI"""
     from lagos.tui import Chat
+
+    if model != DEFAULT_MODEL:
+        # Use the same tokenizer as the model
+        tokenizer = model
 
     Chat.run(title="Solipsis", log="textual.log", model=model, tokenizer=tokenizer)
