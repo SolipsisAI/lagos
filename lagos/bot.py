@@ -1,11 +1,16 @@
 import threading
 
-from uuid import UUID
+import torch
+
+from typing import Union
 
 from persistqueue import SQLiteQueue
-
-from lagos.pipelines import load_pipeline
-from lagos.pipelines.conversational import Conversational
+from transformers import (
+    AutoModelForCausalLM,
+    AutoTokenizer,
+    PreTrainedModel,
+    PreTrainedTokenizer,
+)
 
 from lagos import store
 from lagos.records import MessageRecord
@@ -16,17 +21,19 @@ class Bot:
         self,
         *,
         name: str = "Erica",
-        model: str = "microsoft/DialoGPT-large",
+        model: Union[str, PreTrainedModel] = "microsoft/DialoGPT-large",
+        tokenizer: Union[str, PreTrainedTokenizer] = "microsoft/DialoGPT-large",
         daemon: bool = False,
         callback=None,
     ):
         self.name: str = name
         self.bot_user: MessageRecord = None
         self.thread: threading.Thread = None
-        self.pipeline: Conversational = None
+        self.model: Union[str, PreTrainedModel] = model
+        self.tokenizer: Union[str, PreTrainedTokenizer] = tokenizer
 
-        # Model name
-        self.model = model
+        self.chat_history_ids = []
+        self.step = 0
 
         # Setup DB connection
         self.con = store.load()
@@ -45,19 +52,17 @@ class Bot:
         return store.last_message(self.con)
 
     def load_resources(self):
-        # Get bot user
         if not bool(self.bot_user):
             self.bot_user = store.get_user(self.con, name=self.name)
 
-        # Load pipeline
-        if not bool(self.pipeline):
-            self.pipeline = load_pipeline("conversational", model=self.model)
+        if isinstance(self.model, str):
+            self.model = AutoModelForCausalLM.from_pretrained(self.model)
+
+        if isinstance(self.tokenizer, str):
+            self.tokenizer = AutoTokenizer.from_pretrained(self.tokenizer)
 
     async def add(self, message: MessageRecord):
         """Receive an input message"""
-        if self.last_event:
-            message.conversation_id = self.last_event.conversation_id
-
         msg = store.insert_message(self.con, message)
         self.q.put(msg)
 
@@ -77,21 +82,12 @@ class Bot:
     def respond(self):
         """Response to the last message"""
         received = self.q.get()
-
-        conversation_id = received.conversation_id
-
-        conversation = self.pipeline.predict(
-            text=received.text,
-            conversation_id=UUID(conversation_id),
-        )
-
-        text = conversation.generated_responses[-1]
+        response_text = self.generate_responses(text=received.text)
 
         response = MessageRecord(
             {
                 "author_id": self.bot_user.id,
-                "conversation_id": conversation_id,
-                "text": text,
+                "text": response_text,
             }
         )
 
@@ -103,3 +99,37 @@ class Bot:
             self.callback(self.last_event)
 
         return self.last_event
+
+    def generate_responses(self, text):
+        # encode the new user input, add the eos_token and return a tensor in Pytorch
+        new_user_input_ids = self.tokenizer.encode(
+            text + self.tokenizer.eos_token, return_tensors="pt"
+        )
+
+        # append the new user input tokens to the chat history
+        bot_input_ids = (
+            torch.cat([self.chat_history_ids, new_user_input_ids], dim=-1)
+            if self.step > 0
+            else new_user_input_ids
+        )
+
+        # generated a response while limiting the total chat history to 1000 tokens,
+        self.chat_history_ids = self.model.generate(
+            bot_input_ids,
+            max_length=512,
+            pad_token_id=self.tokenizer.eos_token_id,
+            no_repeat_ngram_size=3,
+            do_sample=True,
+            top_k=100,
+            top_p=0.7,
+            temperature=0.8,
+        )
+
+        response = self.tokenizer.decode(
+            self.chat_history_ids[:, bot_input_ids.shape[-1] :][0],
+            skip_special_tokens=True,
+        )
+
+        self.step += 1
+
+        return response

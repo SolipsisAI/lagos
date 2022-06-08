@@ -41,7 +41,7 @@ def create(con: sqlite3.Connection) -> sqlite3.Connection:
         CREATE TABLE messages (
             id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
             author_id INTEGER NOT NULL,
-            conversation_id INTEGER NOT NULL,
+            conversation_id TEXT,
             text TEXT,
             timestamp DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL
         );
