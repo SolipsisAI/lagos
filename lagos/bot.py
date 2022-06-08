@@ -3,7 +3,6 @@ import threading
 import torch
 
 from typing import Union
-from uuid import UUID
 
 from persistqueue import SQLiteQueue
 from transformers import (
