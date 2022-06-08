@@ -1,9 +1,11 @@
 import threading
 
+from uuid import UUID
+
 from persistqueue import SQLiteQueue
 
 from lagos.pipelines import load_pipeline
-from lagos.pipelines.conversational import Conversation
+from lagos.pipelines.conversational import Conversational
 
 from lagos import store
 from lagos.records import MessageRecord
@@ -18,11 +20,10 @@ class Bot:
         daemon: bool = False,
         callback=None,
     ):
-        self.name = name
-        self.bot_user = None
-        self.thread = None
-        self.pipeline = None
-        self.conversation = None
+        self.name: str = name
+        self.bot_user: MessageRecord = None
+        self.thread: threading.Thread = None
+        self.pipeline: Conversational = None
 
         # Model name
         self.model = model
@@ -54,10 +55,8 @@ class Bot:
 
     async def add(self, message: MessageRecord):
         """Receive an input message"""
-        if not bool(self.conversation):
-            self.conversation = Conversation(message.text)
-
-        message.conversation_id = str(self.conversation.uuid)
+        if self.last_event:
+            message.conversation_id = self.last_event.conversation_id
 
         msg = store.insert_message(self.con, message)
         self.q.put(msg)
@@ -81,11 +80,9 @@ class Bot:
 
         conversation_id = received.conversation_id
 
-        if not self.pipeline.get_context(conversation_id):
-            self.pipeline.add_context(self.conversation, text=received.text)
-         
-        conversation_id, conversation = self.pipeline.predict(
-            conversation_id=conversation_id
+        conversation = self.pipeline.predict(
+            text=received.text,
+            conversation_id=UUID(conversation_id),
         )
 
         text = conversation.generated_responses[-1]

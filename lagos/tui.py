@@ -180,7 +180,6 @@ class Chat(App):
 
         message = MessageRecord(
             {
-                "conversation_id": "12345",
                 "username": "bitjockey",
                 "author_id": 2,
                 "text": text,

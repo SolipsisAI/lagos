@@ -1,7 +1,8 @@
-from typing import Tuple, Union
+from uuid import uuid4
 
 from transformers import Conversation
 
+from lagos.utils import CustomDict
 from .base import BasePipeline
 
 
@@ -21,32 +22,21 @@ class Conversational(BasePipeline):
             options={"model": model, "tokenizer": tokenizer},
             device=device,
         )
-        self.context = {}
+        self.context = CustomDict(Conversation, "conversation_id")
 
-    def add_context(self, conversation_obj: Union[str, Conversation], text: str = None):
-        conversation_id = None
+    def add_context(self, text: str, conversation_id: str = None):
+        if conversation_id is None:
+            conversation_id = str(uuid4())
 
-        if isinstance(conversation_obj, Conversation):
-            conversation_id = str(conversation_obj.uuid)
-            self.context[conversation_id] = conversation_obj
-        elif isinstance(conversation_obj, str):
-            conversation_id = conversation_obj
-            if conversation_id not in self.context:
-                conversation = Conversation()
-                conversation_id = str(conversation.uuid)
-                self.context[conversation_id] = conversation
-        
-        if text:
-            self.context[conversation_id].add_user_input(text)
+        self.context[conversation_id].add_user_input(text)
 
         return conversation_id
 
     def get_context(self, conversation_id: str):
+        print(self.context.get(conversation_id))
         return self.context.get(conversation_id)
 
-    def predict(
-        self, conversation_id: str = None, text: str = None
-    ) -> Tuple[str, Conversation]:
-        conversation_id = self.add_context(conversation_id, text)
+    def predict(self, text: str = None, conversation_id: str = None) -> Conversation:
+        conversation_id = self.add_context(text=text, conversation_id=conversation_id)
         context = self.get_context(conversation_id)
-        return conversation_id, self.pipeline(context)
+        return self.pipeline(context)

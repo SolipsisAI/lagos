@@ -144,7 +144,7 @@ def last_message(con: sqlite3.Connection):
     )
     result = cur.fetchone()
 
-    return MessageRecord(result)
+    return MessageRecord(result) if result else None
 
 
 def get_user(con: sqlite3.Connection, name: str):
@@ -153,7 +153,7 @@ def get_user(con: sqlite3.Connection, name: str):
     cur.execute("SELECT * FROM users WHERE name = ?", [name])
     result = cur.fetchone()
 
-    return UserRecord(result)
+    return UserRecord(result) if result else None
 
 
 def get_users(con: sqlite3.Connection):
