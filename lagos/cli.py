@@ -30,8 +30,10 @@ def serve(host, port):
 
 
 @cli.command()
-def app():
+@click.option("--model", "-m", default="microsoft/DialoGPT-large")
+@click.option("--tokenizer", "-t", default="microsoft/DialoGPT-large")
+def app(model, tokenizer):
     """Launch text-based UI"""
     from lagos.tui import Chat
 
-    Chat.run(title="Solipsis", log="textual.log")
+    Chat.run(title="Solipsis", log="textual.log", model=model, tokenizer=tokenizer)

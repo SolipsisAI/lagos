@@ -1,13 +1,15 @@
 # app.py
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, List, Type
+from rich.console import Console
 
 from rich.style import Style
 from rich.table import Table
 from rich.text import Text
 from textual import events
 from textual.app import App
+from textual.driver import Driver
 from textual.widget import Widget, Reactive
 from textual.widgets import Footer, Header, ScrollView
 
@@ -104,9 +106,11 @@ class Chat(App):
     current_index: Reactive[int] = Reactive(-1)
     last_message_id: Reactive[int] = Reactive(0)
 
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, model, tokenizer, **kwargs) -> None:
         super().__init__(**kwargs)
         self.tab_index: List[str] = ["message_input"]
+        self.model = model
+        self.tokenizer = tokenizer
 
     def add_message(self, message: MessageRecord):
         self.message_list.messages.append(message)
@@ -152,7 +156,12 @@ class Chat(App):
             message_input=self.message_input,
         )
 
-        self.bot = Bot(daemon=True, callback=self.add_message)
+        self.bot = Bot(
+            model=self.model,
+            tokenizer=self.tokenizer,
+            daemon=True,
+            callback=self.add_message,
+        )
 
     async def watch_last_message_id(self, value: int) -> None:
         self.message_list.refresh()
