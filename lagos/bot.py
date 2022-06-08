@@ -116,7 +116,7 @@ class Bot:
         # generated a response while limiting the total chat history to 1000 tokens,
         self.chat_history_ids = self.model.generate(
             bot_input_ids,
-            max_length=512,
+            max_length=200,
             pad_token_id=self.tokenizer.eos_token_id,
             no_repeat_ngram_size=3,
             do_sample=True,
