@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from datetime import datetime
 
 from typing import Tuple, Union, Dict
@@ -36,7 +38,7 @@ class MessageRecord:
         elif isinstance(row, dict):
             self.id = row.get("id")
             self.author_id = row.get("author_id")
-            self.conversation_id = row.get("conversation_id")
+            self.conversation_id = row.get("conversation_id", str(uuid4()))
             self.text = row.get("text")
             self.timestamp = row.get(
                 "timestamp", datetime.now().strftime("%Y-%m-%d %H:%M:%S")

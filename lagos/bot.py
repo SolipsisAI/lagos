@@ -1,9 +1,11 @@
 import threading
-import tempfile
 
-from persistqueue import Queue
+from uuid import UUID
+
+from persistqueue import SQLiteQueue
 
 from lagos.pipelines import load_pipeline
+from lagos.pipelines.conversational import Conversational
 
 from lagos import store
 from lagos.records import MessageRecord
@@ -18,10 +20,10 @@ class Bot:
         daemon: bool = False,
         callback=None,
     ):
-        self.name = name
-
-        self.thread = None
-        self.pipeline = None
+        self.name: str = name
+        self.bot_user: MessageRecord = None
+        self.thread: threading.Thread = None
+        self.pipeline: Conversational = None
 
         # Model name
         self.model = model
@@ -30,41 +32,43 @@ class Bot:
         self.con = store.load()
 
         # Setup queue
-        dirpath = tempfile.mkdtemp()
-        self.q = Queue(dirpath)
-
-        # Get users
-        # bot_user = store.get_user(self.con, name=name)
-        # self.bot_id = bot_user.id
-        self.bot_id = 1
+        self.q = SQLiteQueue(".lagos_queue", multithreading=daemon)
 
         # Run the bot in a different thread
         if daemon:
             self.callback = callback
-            self.thread = threading.Thread(target=self.run, args=())
-            self.daemon = True
+            self.thread = threading.Thread(target=self.run, args=(), daemon=daemon)
             self.thread.start()
 
     @property
     def last_event(self):
         return store.last_message(self.con)
 
-    def load_pipeline(self):
-        if self.pipeline is None:
+    def load_resources(self):
+        # Get bot user
+        if not bool(self.bot_user):
+            self.bot_user = store.get_user(self.con, name=self.name)
+
+        # Load pipeline
+        if not bool(self.pipeline):
             self.pipeline = load_pipeline("conversational", model=self.model)
 
     async def add(self, message: MessageRecord):
         """Receive an input message"""
+        if self.last_event:
+            message.conversation_id = self.last_event.conversation_id
+
         msg = store.insert_message(self.con, message)
         self.q.put(msg)
 
-        if self.callback:
+        if bool(self.callback) and self.callback:
             self.callback(msg)
 
         return msg
 
     def run(self):
-        self.load_pipeline()
+        self.load_resources()
+
         while True:
             if self.q.empty():
                 continue
@@ -75,21 +79,27 @@ class Bot:
         received = self.q.get()
 
         conversation_id = received.conversation_id
-        conversation_id, conversation = self.pipeline.predict(
-            conversation_id=conversation_id, text=received.text
+
+        conversation = self.pipeline.predict(
+            text=received.text,
+            conversation_id=UUID(conversation_id),
         )
 
         text = conversation.generated_responses[-1]
 
         response = MessageRecord(
-            {"author_id": self.bot_id, "conversation_id": conversation_id, "text": text}
+            {
+                "author_id": self.bot_user.id,
+                "conversation_id": conversation_id,
+                "text": text,
+            }
         )
 
         store.insert_message(self.con, response)
 
         self.q.task_done()
 
-        if self.callback is not None:
+        if bool(self.callback):
             self.callback(self.last_event)
 
         return self.last_event
