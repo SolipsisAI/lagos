@@ -1,24 +1,26 @@
-FROM python:3.10 as builder
+ARG PYTHON_BASE=3.10-slim
+# build stage
+FROM python:$PYTHON_BASE AS builder
 
 # install PDM
-RUN pip install -U pip setuptools wheel
-RUN pip install pdm
-
+RUN pip install -U pdm
+# disable update check
+ENV PDM_CHECK_UPDATE=false
 # copy files
 COPY pyproject.toml pdm.lock README.md /project/
-COPY lagos/ /project/lagos
+COPY lagos/ /project/src
 
-# install dependencies and project
+# install dependencies and project into the local packages directory
 WORKDIR /project
-RUN pdm install --prod --no-lock --no-editable
+RUN pdm install --check --prod --no-editable
 
 # run stage
-FROM python:3.10
+FROM python:$PYTHON_BASE
 
 # retrieve packages from build stage
-ENV PYTHONPATH=/app/pkgs
-COPY --from=builder /project/__pypackages__/3.10/lib /app/pkgs
+COPY --from=builder /project/.venv/ /project/.venv
+ENV PATH="/project/.venv/bin:$PATH"
+# set command/entrypoint, adapt to fit your needs
+COPY lagos /project/src
 
-WORKDIR /app
-
-CMD [ "python", "-m", "lagos", "serve", "-H", "0.0.0.0" ]
+CMD [ "python", "src/__main__.py", "serve", "-H", "0.0.0.0" ]
