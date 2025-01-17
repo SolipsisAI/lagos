@@ -8,7 +8,7 @@ RUN pip install -U pdm
 ENV PDM_CHECK_UPDATE=false
 # copy files
 COPY pyproject.toml pdm.lock README.md /project/
-COPY lagos/ /project/src
+COPY lagos/ /project/lagos
 
 # install dependencies and project into the local packages directory
 WORKDIR /project
@@ -21,6 +21,6 @@ FROM python:$PYTHON_BASE
 COPY --from=builder /project/.venv/ /project/.venv
 ENV PATH="/project/.venv/bin:$PATH"
 # set command/entrypoint, adapt to fit your needs
-COPY lagos /project/src
+COPY lagos /project/lagos
 
-CMD [ "python", "src/__main__.py", "serve", "-H", "0.0.0.0" ]
+CMD [ "python", "lagos/__main__.py", "serve", "-H", "0.0.0.0" ]
